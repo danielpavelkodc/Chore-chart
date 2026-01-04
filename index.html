@@ -334,6 +334,7 @@
     .fxOverlay{
       position:fixed;
       inset:0;
+      min-height:100dvh;
       display:none;
       align-items:center;
       justify-content:center;
@@ -411,6 +412,34 @@
       border: var(--stroke) solid rgba(2,6,23,.08);
       color:#0b1220;
     }
+
+    /* Timer UI */
+    .timerRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:10px;
+    }
+    .timerPill{
+      display:inline-block;
+      padding:8px 12px;
+      border-radius:999px;
+      font-weight:1000;
+      background: rgba(37,99,235,.10);
+      border: var(--stroke) solid rgba(37,99,235,.18);
+      color:#08101f;
+      box-shadow: var(--shadow2);
+    }
+    .timerDone{
+      background: rgba(22,163,74,.12);
+      border-color: rgba(22,163,74,.18);
+    }
+    .btnGo{
+      background: linear-gradient(135deg, rgba(34,211,238,.95), rgba(37,99,235,.95));
+      color:#08101f;
+      min-width: 140px;
+    }
   </style>
 </head>
 
@@ -436,7 +465,7 @@
           <div class="robloxBadge" aria-hidden="true"></div>
           <div>
             <h1>Chore List</h1>
-            <p class="subtitle">Hold a red chore button for 3 seconds to claim it. Parent approves or declines.</p>
+            <p class="subtitle">Timed chores: tap GO, finish the timer, then hold the red button for 3 seconds to claim. Parent approves or declines.</p>
           </div>
         </div>
       </div>
@@ -501,9 +530,9 @@
       <div class="card">
         <div class="sectionTitle">Chores</div>
         <div class="smallNote">
-          Red = hold to claim. Yellow = claimed (waiting for parent). Green = approved.
+          Red = timed or ready to claim. Yellow = claimed (waiting for parent). Green = approved.
         </div>
-        <div class="holdHint">Hold a red button for 3 seconds to claim.</div>
+        <div class="holdHint">Timed chores: tap GO first, then hold the red button for 3 seconds to claim.</div>
         <ul id="kidChoreList"></ul>
       </div>
     </div>
@@ -672,7 +701,7 @@
 
 <script>
 (() => {
-  const STORAGE_KEY = "kids_chore_chart_v9_fullscreen_fx_locked_top3";
+  const STORAGE_KEY = "kids_chore_chart_v10_timers_go_parent_prompt";
 
   const MAX_STARS = 10;
   const STRIKES_MAX = 3;
@@ -700,7 +729,6 @@
   // Defaults (first 10 will auto-populate ONE time if list is empty,
   // but LOCKED_TOP always pins to the top even if user adds/edits others)
   const DEFAULT_CHORE_TEMPLATES = [
-    // Include the locked ones here too; logic will de-dupe and lock
     "Ask mom/dad for a chore",
     "Make bed, get dressed, and eat breakfast",
     "Brush teeth in the morning",
@@ -876,7 +904,10 @@
   // FX overlay close
   fxCloseBtn.addEventListener("click", closeFx);
   fxOverlay.addEventListener("click", (e) => { if(e.target === fxOverlay) closeFx(); });
-  function closeFx(){ fxOverlay.style.display = "none"; }
+  function closeFx(){
+    fxOverlay.style.display = "none";
+    document.body.style.overflow = "";
+  }
 
   // Mystery button: must STATE what it is, fullscreen, then add chore
   mysteryBtn.addEventListener("click", () => {
@@ -903,7 +934,7 @@
       sound: "mystery"
     });
 
-    // Add chore
+    // Add chore (no timer for mystery by default)
     app.state.chores.push({
       id: rid(),
       name: "🎁 " + prompt,
@@ -911,7 +942,10 @@
       approvedAllTime: 0,
       createdAt: Date.now(),
       locked: false,
-      lockKey: ""
+      lockKey: "",
+      timerSeconds: 0,
+      timerEndsAt: 0,
+      timerDoneToday: false
     });
 
     app.state.mysteryUsedKey = today;
@@ -978,7 +1012,10 @@
         approvedAllTime: 0,
         createdAt: Date.now() + Math.floor(Math.random()*10),
         locked: false,
-        lockKey: ""
+        lockKey: "",
+        timerSeconds: guessTimerSeconds(name),
+        timerEndsAt: 0,
+        timerDoneToday: false
       });
       added += 1;
     });
@@ -1020,7 +1057,10 @@
       approvedAllTime: 0,
       createdAt: Date.now(),
       locked: false,
-      lockKey: ""
+      lockKey: "",
+      timerSeconds: guessTimerSeconds(name),
+      timerEndsAt: 0,
+      timerDoneToday: false
     });
 
     newChoreName.value = "";
@@ -1108,6 +1148,18 @@
     if(!c) return;
     if(c.statusToday !== "pending") return;
 
+    // Timed chores require timer completion
+    if((c.timerSeconds || 0) > 0 && !c.timerDoneToday){
+      showFx({
+        emoji: "⏱️",
+        title: "Start the timer first",
+        sub: "Tap GO, finish the timer, then hold to claim.",
+        confetti: false,
+        sound: "error"
+      });
+      return;
+    }
+
     c.statusToday = "claimed";
 
     const beforeStars = starsFromPoints(app.state.points);
@@ -1118,10 +1170,12 @@
     renderAll();
 
     const praise = PRAISE[Math.floor(Math.random()*PRAISE.length)];
+    const bringToParent = "Bring the iPad to a parent to approve.";
+
     showFx({
       emoji: afterStars > beforeStars ? "⭐" : "🎉",
       title: praise,
-      sub: afterStars > beforeStars ? "Star earned!" : "Claimed!",
+      sub: afterStars > beforeStars ? `Star earned! ${bringToParent}` : `Claimed! ${bringToParent}`,
       confetti: true,
       sound: afterStars > beforeStars ? "star" : "claim"
     });
@@ -1161,7 +1215,7 @@
     showFx({
       emoji: "❌",
       title: "Declined",
-      sub: (afterStars < beforeStars) ? "Star removed." : "Reset to red.",
+      sub: (afterStars < beforeStars) ? "Star removed. Try again." : "Reset to red.",
       confetti: false,
       sound: "decline"
     });
@@ -1176,6 +1230,7 @@
       addPoints(app.state, -app.pointsPerChore);
     }
     c.statusToday = "pending";
+    // do not reset timerDoneToday; parent can choose to reset day if needed
     saveApp();
     renderAll();
     toast("Reset to red");
@@ -1221,7 +1276,13 @@
   function resetDay(){
     app.state.points = 0;
     app.state.strikes = 0;
-    app.state.chores.forEach(c => c.statusToday = "pending");
+
+    app.state.chores.forEach(c => {
+      c.statusToday = "pending";
+      c.timerEndsAt = 0;
+      c.timerDoneToday = false;
+    });
+
     app.state.lastPerfectDayKey = "";
     app.state.mysteryUsedKey = "";
     app.state.lastDateKey = dateKey(new Date());
@@ -1237,6 +1298,122 @@
     }
   }
 
+  // ---------------- Timers (auto per chore) ----------------
+  function guessTimerSeconds(name){
+    const n = String(name || "").toLowerCase();
+
+    // Hard rules first
+    if(n.includes("brush teeth") && n.includes("night")) return 120;
+    if(n.includes("brush teeth")) return 120;
+
+    if(n.includes("read") && n.includes("10")) return 600;
+    if(n.includes("read")) return 600;
+
+    if(n.includes("make bed")) return 600;
+    if(n.includes("get dressed")) return 600;
+    if(n.includes("eat breakfast")) return 600;
+
+    if(n.includes("clean your room") || n.includes("pick up toys")) return 300;
+    if(n.includes("dishes") || n.includes("dishwasher") || n.includes("sink")) return 120;
+
+    if(n.includes("pack backpack") || n.includes("school stuff")) return 180;
+    if(n.includes("homework")) return 600;
+
+    if(n.includes("feed the pet") || n.includes("feed pet")) return 60;
+
+    // Ask mom/dad: no timer required
+    if(n.includes("ask mom") || n.includes("ask dad")) return 0;
+
+    // Mystery: no timer required
+    if(n.includes("🎁")) return 0;
+
+    // Default: no timer required
+    return 0;
+  }
+
+  function nowMs(){ return Date.now(); }
+
+  function isTimerRunning(c){
+    return (c.timerEndsAt || 0) > nowMs();
+  }
+
+  function timerRemainingMs(c){
+    return Math.max(0, (c.timerEndsAt || 0) - nowMs());
+  }
+
+  function fmtMMSS(ms){
+    const s = Math.ceil(ms / 1000);
+    const mm = String(Math.floor(s / 60)).padStart(2,"0");
+    const ss = String(s % 60).padStart(2,"0");
+    return `${mm}:${ss}`;
+  }
+
+  function fmtMinutes(secs){
+    const m = Math.max(0, Math.round(secs / 60));
+    return (m <= 1) ? "1 min" : `${m} min`;
+  }
+
+  function startChoreTimer(choreId){
+    const c = app.state.chores.find(x => x.id === choreId);
+    if(!c) return;
+    if(c.statusToday !== "pending") return;
+
+    const secs = clampInt(c.timerSeconds ?? 0, 0, 3600);
+    if(secs <= 0){
+      toast("No timer needed for this chore");
+      return;
+    }
+
+    if(c.timerDoneToday){
+      toast("Timer already completed");
+      return;
+    }
+
+    c.timerEndsAt = nowMs() + (secs * 1000);
+    saveApp();
+    renderAll();
+    startTimerTick();
+    if(app.soundOn) sfx("arm");
+  }
+
+  let timerRAF = null;
+  function startTimerTick(){
+    if(timerRAF) return;
+
+    const loop = () => {
+      let changed = false;
+
+      for(const c of app.state.chores){
+        if(c.timerEndsAt && c.timerEndsAt <= nowMs()){
+          c.timerEndsAt = 0;
+          if(!c.timerDoneToday){
+            c.timerDoneToday = true;
+            changed = true;
+          }
+        }
+      }
+
+      if(changed){
+        saveApp();
+        renderAll();
+        toast("Timer done ✅");
+        if(app.soundOn) sfx("star");
+      } else {
+        if(app.state.chores.some(isTimerRunning)){
+          renderAll();
+        }
+      }
+
+      if(app.state.chores.some(isTimerRunning)){
+        timerRAF = requestAnimationFrame(loop);
+      } else {
+        timerRAF = null;
+      }
+    };
+
+    timerRAF = requestAnimationFrame(loop);
+  }
+
   // ---------------- Locked top chores enforcement ----------------
   function ensureLockedTopExists(){
     // Add missing locked chores and enforce correct keys/names
@@ -1245,6 +1422,7 @@
       if(existingByKey){
         existingByKey.name = lt.name;
         existingByKey.locked = true;
+        existingByKey.timerSeconds = guessTimerSeconds(existingByKey.name);
         return;
       }
 
@@ -1254,6 +1432,7 @@
         existingByName.locked = true;
         existingByName.lockKey = lt.key;
         existingByName.name = lt.name;
+        existingByName.timerSeconds = guessTimerSeconds(existingByName.name);
         return;
       }
 
@@ -1263,9 +1442,12 @@
         name: lt.name,
         statusToday: "pending",
         approvedAllTime: 0,
-        createdAt: Date.now() + idx, // stable ordering
+        createdAt: Date.now() + idx,
         locked: true,
-        lockKey: lt.key
+        lockKey: lt.key,
+        timerSeconds: guessTimerSeconds(lt.name),
+        timerEndsAt: 0,
+        timerDoneToday: false
       });
     });
 
@@ -1274,7 +1456,6 @@
     app.state.chores.forEach(c => {
       const n = norm(c.name);
       if(seen.has(n) && c.locked){
-        // keep locked, but if duplicate locked, change to non-locked copy
         c.locked = false;
         c.lockKey = "";
       } else {
@@ -1285,13 +1466,11 @@
 
   function autopopulateDefaultsOnce(){
     if(app.state.chores.length > 0) {
-      // still enforce locked top
       ensureLockedTopExists();
       saveApp();
       return;
     }
 
-    // Start with the locked top (in order), then fill until 10 items total (including locked)
     ensureLockedTopExists();
 
     const wantCount = 10;
@@ -1301,11 +1480,8 @@
 
     for(const name of candidates){
       if(app.state.chores.length >= wantCount) break;
-
-      // skip if already exists (locked or not)
       if(app.state.chores.some(c => norm(c.name) === norm(name))) continue;
 
-      // do not add locked by name here; ensureLockedTopExists handles them
       const lockHit = LOCKED_TOP.find(x => norm(x.name) === norm(name));
       if(lockHit) continue;
 
@@ -1316,11 +1492,13 @@
         approvedAllTime: 0,
         createdAt: Date.now() + Math.floor(Math.random()*10),
         locked: false,
-        lockKey: ""
+        lockKey: "",
+        timerSeconds: guessTimerSeconds(name),
+        timerEndsAt: 0,
+        timerDoneToday: false
       });
     }
 
-    // If still less than 10, that's OK (but should not happen with given list)
     ensureLockedTopExists();
     saveApp();
   }
@@ -1374,7 +1552,7 @@
     kidChoreList.innerHTML = "";
 
     const orderWeight = (c) => {
-      if(c.locked) return -10; // always top
+      if(c.locked) return -10;
       return (c.statusToday === "pending") ? 0 : (c.statusToday === "claimed" ? 1 : 2);
     };
 
@@ -1387,13 +1565,11 @@
       const wa = orderWeight(a), wb = orderWeight(b);
       if(wa !== wb) return wa - wb;
 
-      // within locked, enforce fixed order
       if(a.locked && b.locked){
         const la = lockIndex(a), lb = lockIndex(b);
         if(la !== lb) return la - lb;
       }
 
-      // otherwise stable-ish
       const ca = Number(a.createdAt) || 0;
       const cb = Number(b.createdAt) || 0;
       if(ca !== cb) return ca - cb;
@@ -1414,9 +1590,9 @@
         : c.statusToday === "claimed" ? "btnYellow"
         : "btnGreen";
 
-      // Red button has no “not complete” wording
+      // Red button has no wording requirement (use icon only so it isn't blank)
       const btnText =
-        c.statusToday === "pending" ? "&nbsp;"
+        c.statusToday === "pending" ? "✋"
         : c.statusToday === "claimed" ? "✅ Claimed (waiting)"
         : "✅ Approved";
 
@@ -1425,30 +1601,68 @@
         : c.statusToday === "claimed" ? "🟡"
         : "🟢";
 
-      const disabled = (c.statusToday !== "pending") ? "disabled" : "";
-
       const lockTag = c.locked ? `<span class="lockPill">LOCKED</span>` : "";
+
+      // Timer logic for pending chores
+      const needsTimer = (c.statusToday === "pending" && (c.timerSeconds || 0) > 0);
+      const running = needsTimer && isTimerRunning(c);
+      const done = needsTimer && !!c.timerDoneToday;
+
+      const holdDisabled =
+        (c.statusToday !== "pending") ? true :
+        (needsTimer && !done) ? true :
+        false;
+
+      const disabledAttr = holdDisabled ? "disabled" : "";
+      const ariaLabel = (!holdDisabled && c.statusToday === "pending") ? "Hold 3 seconds to claim" : "Status";
+
+      const timerUi = (needsTimer)
+        ? `
+          <div class="timerRow">
+            <button class="btn btnGo" type="button" ${done ? "disabled" : ""} data-go="1">
+              ${running ? "⏱ Running" : "▶️ GO"}
+            </button>
+            <span class="timerPill ${done ? "timerDone" : ""}">
+              ${done ? "Timer complete ✅" : (running ? fmtMMSS(timerRemainingMs(c)) : `Time: ${fmtMinutes(c.timerSeconds||0)}`)}
+            </span>
+          </div>
+        `
+        : "";
 
       li.innerHTML = `
         <div class="choreTop">
           <div class="choreName">${statusIcon} ${escapeHtml(c.name)} ${lockTag}</div>
           <div class="choreMeta">${meta}</div>
         </div>
+
         <div class="btnRow">
-          <button class="btn ${btnClass} ${c.statusToday === "pending" ? "holdable" : ""}" type="button" ${disabled}
-                  aria-label="${c.statusToday === "pending" ? "Hold 3 seconds to claim" : "Status"}">
+          <button class="btn ${btnClass} ${(!holdDisabled && c.statusToday === "pending") ? "holdable" : ""}" type="button" ${disabledAttr}
+                  aria-label="${ariaLabel}">
             ${btnText}
           </button>
         </div>
+
+        ${timerUi}
       `;
 
-      const btn = li.querySelector("button");
-      if(c.statusToday === "pending"){
-        attachHoldToClaim(btn, () => claimChore(c.id));
+      const mainBtn = li.querySelector(".btnRow button");
+
+      // Attach GO handler if present
+      const goBtn = li.querySelector("button[data-go='1']");
+      if(goBtn){
+        goBtn.addEventListener("click", () => startChoreTimer(c.id));
+      }
+
+      // Attach hold-to-claim only if enabled
+      if(c.statusToday === "pending" && !holdDisabled){
+        attachHoldToClaim(mainBtn, () => claimChore(c.id));
       }
 
       kidChoreList.appendChild(li);
     });
+
+    // If any timer is running, keep ticking
+    if(app.state.chores.some(isTimerRunning)) startTimerTick();
 
     if(unlocked){
       renderParentSummary();
@@ -1489,13 +1703,17 @@
     claimedChores.forEach(c => {
       const li = document.createElement("li");
       li.className = "choreItem";
+
+      const needsTimer = ((c.timerSeconds || 0) > 0);
+      const timerTag = needsTimer ? (c.timerDoneToday ? "⏱ Timer done ✅" : "⏱ Timer not used") : "⏱ No timer";
+
       li.innerHTML = `
         <div class="choreTop">
           <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
             <input type="checkbox" data-id="${escapeAttr(c.id)}" style="width:22px; height:22px;" />
             <div class="choreName">🟡 ${escapeHtml(c.name)}</div>
           </div>
-          <div class="choreMeta">Claimed: waiting for review</div>
+          <div class="choreMeta">${timerTag}</div>
         </div>
         <div class="btnRow">
           <button class="btn btnGreen" type="button">✅ Approve</button>
@@ -1512,7 +1730,6 @@
   function renderParentChores(){
     parentChoreList.innerHTML = "";
 
-    // Show in same order as kid list (locked top first)
     const orderWeight = (c) => c.locked ? -10 : (c.statusToday === "pending" ? 0 : (c.statusToday === "claimed" ? 1 : 2));
     const lockIndex = (c) => {
       const i = LOCKED_TOP.findIndex(x => x.key === c.lockKey);
@@ -1543,12 +1760,17 @@
 
       const lockTag = c.locked ? `<span class="lockPill">LOCKED</span>` : "";
 
+      const timerInfo = ((c.timerSeconds || 0) > 0)
+        ? `<span class="timerPill" style="margin-top:8px; display:inline-block;">⏱ ${fmtMinutes(c.timerSeconds||0)}</span>`
+        : `<span class="timerPill" style="margin-top:8px; display:inline-block;">⏱ No timer</span>`;
+
       li.innerHTML = `
         <div class="choreTop">
           <div style="flex:1; min-width:240px;">
             <div class="smallNote" style="margin:0 0 6px;">Name ${lockTag}</div>
             <input class="inputWide" data-id="${escapeAttr(c.id)}" type="text" value="${escapeAttr(c.name)}" ${c.locked ? "disabled" : ""} />
             <div style="margin-top:8px; font-weight:950; color: var(--muted);">${statusChip}</div>
+            ${timerInfo}
           </div>
           <div class="choreMeta">Approved all-time: ${c.approvedAllTime}</div>
         </div>
@@ -1568,7 +1790,6 @@
         const newName = (input.value || "").trim();
         if(!newName) return toast("Enter a name");
 
-        // prevent renaming into locked names
         if(LOCKED_TOP.some(x => norm(x.name) === norm(newName))){
           ensureLockedTopExists();
           return toast("That name is reserved (locked top chore).");
@@ -1578,6 +1799,7 @@
         if(exists) return toast("Duplicate name");
 
         c.name = newName;
+        c.timerSeconds = guessTimerSeconds(c.name); // auto-update timer if name changes
         saveApp();
         renderAll();
         toast("Saved");
@@ -1632,13 +1854,17 @@
     fxConfettiLayer.innerHTML = "";
     if(confetti) fxConfettiBurst(36);
 
+    document.body.style.overflow = "hidden";
     fxOverlay.style.display = "flex";
 
     if(app.soundOn && sound) sfx(sound);
 
     // auto-close after 2.2s (but user can click Continue)
     setTimeout(() => {
-      if(fxOverlay.style.display === "flex") fxOverlay.style.display = "none";
+      if(fxOverlay.style.display === "flex"){
+        fxOverlay.style.display = "none";
+        document.body.style.overflow = "";
+      }
     }, 2200);
   }
 
@@ -1805,7 +2031,10 @@
         approvedAllTime: clampInt(c.approvedAllTime ?? 0, 0, 999999),
         createdAt: Number(c.createdAt) || Date.now(),
         locked: !!c.locked,
-        lockKey: (c.lockKey || "").toString()
+        lockKey: (c.lockKey || "").toString(),
+        timerSeconds: clampInt(c.timerSeconds ?? guessTimerSeconds(c.name), 0, 3600),
+        timerEndsAt: Number(c.timerEndsAt) || 0,
+        timerDoneToday: !!c.timerDoneToday
       }));
 
       const maxPoints = MAX_STARS * clampInt(merged.pointsPerChore, 1, 100);
@@ -1835,11 +2064,9 @@
     // Force passcode fixed always
     app.parentPasscode = "123";
 
-    // normalize app.state
     if(!app.state || typeof app.state !== "object") app.state = defaultState();
     if(!Array.isArray(app.state.chores)) app.state.chores = [];
 
-    // normalize chores
     app.state.chores = app.state.chores.map(c => ({
       id: c.id || rid(),
       name: (c.name || "Chore").toString(),
@@ -1847,13 +2074,14 @@
       approvedAllTime: clampInt(c.approvedAllTime ?? 0, 0, 999999),
       createdAt: Number(c.createdAt) || Date.now(),
       locked: !!c.locked,
-      lockKey: (c.lockKey || "").toString()
+      lockKey: (c.lockKey || "").toString(),
+      timerSeconds: clampInt(c.timerSeconds ?? guessTimerSeconds(c.name), 0, 3600),
+      timerEndsAt: Number(c.timerEndsAt) || 0,
+      timerDoneToday: !!c.timerDoneToday
     }));
 
-    // ensure locked top exists + pinned
     ensureLockedTopExists();
 
-    // clamp points/strikes
     app.pointsPerChore = clampInt(app.pointsPerChore ?? 10, 1, 100);
     app.dailyGoalStars = clampInt(app.dailyGoalStars ?? 8, 1, MAX_STARS);
     app.autoDailyReset = app.autoDailyReset === "off" ? "off" : "on";
@@ -1886,6 +2114,7 @@
 
   function rid(){
     try{
+      if(crypto && crypto.randomUUID) return "c_" + crypto.randomUUID();
       const a = new Uint32Array(2);
       crypto.getRandomValues(a);
       return "c_" + a[0].toString(16) + a[1].toString(16);
