@@ -9,20 +9,9 @@
     :root{
       --ink:#0b1220;
       --muted:#334155;
-
-      /* Roblox-ish: neon + blocky */
       --card: rgba(255,255,255,.92);
-
-      --blue:#2563eb;
-      --purple:#7c3aed;
-      --green:#16a34a;
-      --red:#dc2626;
-      --yellow:#f59e0b;
-      --pink:#db2777;
-
       --shadow: 0 18px 44px rgba(0,0,0,.22);
       --shadow2: 0 12px 26px rgba(0,0,0,.16);
-
       --radius: 18px;
       --radius2: 14px;
       --stroke: 3px;
@@ -138,7 +127,7 @@
     .card > *{position:relative; z-index:1;}
 
     /* BIG STAR COUNT */
-    .starHero{display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom: 10px;}
+    .starHero{display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom: 8px;}
     .starCountBig{display:flex; align-items:flex-end; gap:12px;}
     .starEmojiBig{font-size: 3.3rem; line-height:1; filter: drop-shadow(0 14px 16px rgba(0,0,0,.14));}
     .starNumberBig{font-size: 6.0rem; font-weight: 1000; letter-spacing: -1px; line-height: .92; text-shadow: 0 2px 0 rgba(0,0,0,.05);}
@@ -160,6 +149,29 @@
     .badgeStrike{
       background: linear-gradient(135deg, rgba(220,38,38,.12), rgba(255,255,255,.92));
       border-color: rgba(220,38,38,.18);
+    }
+
+    /* Progress bar */
+    .progressWrap{ margin: 2px 0 8px; }
+    .progressTop{
+      display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;
+      font-weight:950; color: var(--muted);
+    }
+    .progressBar{
+      margin-top:8px;
+      height:18px;
+      border-radius:999px;
+      background: rgba(0,0,0,.08);
+      border: var(--stroke) solid rgba(0,0,0,.06);
+      overflow:hidden;
+      box-shadow: var(--shadow2);
+    }
+    .progressFill{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background: linear-gradient(135deg, rgba(34,211,238,.95), rgba(37,99,235,.95));
+      transition: width .35s ease;
     }
 
     .goalLine{
@@ -193,41 +205,6 @@
     }
     .starDim{filter: grayscale(1) opacity(.22); transform: scale(.92);}
 
-    /* Great Job message under stars */
-    .greatJobWrap{
-      min-height: 56px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      margin-top: 6px;
-      margin-bottom: 4px;
-    }
-    .greatJobMsg{
-      font-size: 2.15rem;
-      font-weight: 1000;
-      color: #000;
-      letter-spacing: .2px;
-      text-align:center;
-      padding: 6px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.92);
-      border: var(--stroke) solid rgba(0,0,0,.08);
-      box-shadow: 0 16px 36px rgba(0,0,0,.22);
-      opacity:0;
-      transform: scale(.75) translateY(8px) rotate(-2deg);
-      filter: drop-shadow(0 10px 16px rgba(0,0,0,.16));
-      pointer-events:none;
-    }
-    @keyframes greatJobPop {
-      0%   {opacity:0; transform: scale(.70) translateY(10px) rotate(-3deg);}
-      12%  {opacity:1; transform: scale(1.08) translateY(0px) rotate(2deg);}
-      22%  {opacity:1; transform: scale(1.00) translateY(0px) rotate(-1deg);}
-      55%  {opacity:1; transform: scale(1.02) translateY(-2px) rotate(1deg);}
-      80%  {opacity:1; transform: scale(1.00) translateY(0px) rotate(0deg);}
-      100% {opacity:0; transform: scale(.92) translateY(4px) rotate(0deg);}
-    }
-    .greatJobShow{animation: greatJobPop 3000ms cubic-bezier(.2,.9,.2,1.05) forwards;}
-
     /* Chores */
     .sectionTitle{font-size:1.45rem; font-weight:1000; margin:0 0 8px;}
     .smallNote{margin: 0 0 10px; color: var(--muted); font-weight:900; font-size:1.02rem;}
@@ -259,6 +236,9 @@
       border: var(--stroke) solid rgba(255,255,255,.52);
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
+      position:relative;
+      overflow:hidden;
+      min-width: 220px;
     }
     .btn:active{transform: scale(.97)}
     .btn:disabled{cursor:not-allowed; opacity:.90; filter:saturate(.85);}
@@ -271,81 +251,32 @@
     .btnPurple{background: linear-gradient(135deg, #c4b5fd, #7c3aed); color:#08101f;}
     .btnGray{background:#eef2f7; color:#1c243a; border-color: rgba(0,0,0,.06);}
 
-    /* FX: Balloon pop on strike */
-    .fxLayer{position:absolute; inset:0; pointer-events:none; display:flex; align-items:center; justify-content:center;}
-    .balloon{
-      font-size: 6.5rem;
-      opacity:0;
-      transform: translateY(10px) scale(.6);
-      filter: drop-shadow(0 16px 18px rgba(0,0,0,.18));
+    /* Hold-to-claim progress */
+    .holdHint{
+      text-align:center;
+      font-weight:950;
+      color: var(--muted);
+      margin: 6px 0 0;
     }
-    @keyframes balloonBoom {
-      0%   {opacity:0; transform: translateY(14px) scale(.5);}
-      15%  {opacity:1; transform: translateY(10px) scale(1.0);}
-      45%  {opacity:1; transform: translateY(0px)  scale(3.0);}
-      70%  {opacity:1; transform: translateY(-2px) scale(3.4) rotate(10deg);}
-      100% {opacity:0; transform: translateY(-6px) scale(.12) rotate(-12deg);}
-    }
-    .balloonBoom{ animation: balloonBoom 520ms ease-in-out forwards; }
-
-    /* FX: Big star celebrate on star earned */
-    .starFx{
-      position:absolute;
-      left:50%;
-      top:44%;
-      transform: translate(-50%,-50%) scale(.4);
-      opacity:0;
-      font-size: 7rem;
-      filter: drop-shadow(0 18px 18px rgba(0,0,0,.18));
-      pointer-events:none;
-    }
-    @keyframes starMegaPop {
-      0%   {opacity:0; transform: translate(-50%,-50%) scale(.35) rotate(-8deg);}
-      15%  {opacity:1; transform: translate(-50%,-50%) scale(.9) rotate(6deg);}
-      45%  {opacity:1; transform: translate(-50%,-50%) scale(2.2) rotate(-6deg);}
-      78%  {opacity:1; transform: translate(-50%,-50%) scale(1.2) rotate(2deg);}
-      100% {opacity:0; transform: translate(-50%,-50%) scale(.95) rotate(0deg);}
-    }
-    .starMegaPop{ animation: starMegaPop 720ms cubic-bezier(.2,.9,.2,1.1) forwards; }
-
-    /* Spark burst */
-    .burst{
-      position:absolute;
-      width: 10px; height: 10px;
-      left:50%; top: 46%;
-      transform: translate(-50%,-50%);
-      pointer-events:none;
-    }
-    .spark{
-      position:absolute; width:10px; height:10px; border-radius:50%;
-      opacity:0;
-      animation: spark 650ms ease-out forwards;
-      box-shadow: 0 8px 14px rgba(0,0,0,.12);
-    }
-    @keyframes spark {
-      0% {transform: translate(0,0) scale(.9); opacity:1;}
-      100%{transform: translate(var(--dx), var(--dy)) scale(0); opacity:0;}
-    }
-
-    /* Confetti layer */
-    .confettiLayer{
+    .holdable::after{
+      content:"";
       position:absolute;
       inset:0;
+      background: rgba(255,255,255,.22);
+      transform: translateX(calc(-100% + (var(--hold, 0) * 100%)));
+      transition: transform .06s linear;
       pointer-events:none;
-      overflow:hidden;
     }
-    .confetti{
+    .holdable::before{
+      content:"Hold 3s";
       position:absolute;
-      width:10px; height:14px;
-      border-radius:3px;
-      opacity:0;
-      transform: translateY(10px) rotate(0deg);
-      animation: confettiFly 900ms ease-out forwards;
-      box-shadow: 0 12px 18px rgba(0,0,0,.14);
-    }
-    @keyframes confettiFly{
-      0%{opacity:1; transform: translateY(18px) rotate(0deg);}
-      100%{opacity:0; transform: translateY(-140px) rotate(240deg);}
+      right:10px;
+      top:50%;
+      transform: translateY(-50%);
+      font-size:.92rem;
+      font-weight:1000;
+      opacity:.92;
+      pointer-events:none;
     }
 
     /* Parent page */
@@ -398,18 +329,114 @@
       user-select:none;
       border: var(--stroke) solid rgba(255,255,255,.20);
     }
+
+    /* FULLSCREEN FX OVERLAY (praise + confetti + big emoji) */
+    .fxOverlay{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:99999;
+      background: rgba(2,6,23,.70);
+      backdrop-filter: blur(6px);
+      padding: 20px;
+      pointer-events:auto;
+    }
+    .fxCard{
+      width:min(640px, 94vw);
+      background: rgba(255,255,255,.95);
+      border-radius: 26px;
+      border: var(--stroke) solid rgba(255,255,255,.55);
+      box-shadow: 0 22px 60px rgba(0,0,0,.38);
+      padding: 16px 16px 14px;
+      text-align:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .fxEmoji{
+      font-size: 5.0rem;
+      margin: 8px 0 6px;
+      filter: drop-shadow(0 14px 16px rgba(0,0,0,.14));
+    }
+    .fxTitle{
+      font-size: 2.2rem;
+      font-weight: 1000;
+      margin: 6px 0 4px;
+      letter-spacing:.2px;
+      color:#08101f;
+    }
+    .fxSub{
+      margin: 0 0 12px;
+      font-weight: 900;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+    .fxBtnRow{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+    .fxConfettiLayer{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+    .fxConfetti{
+      position:absolute;
+      width:10px; height:14px;
+      border-radius:3px;
+      opacity:0;
+      transform: translateY(10px) rotate(0deg);
+      animation: confettiFly 1000ms ease-out forwards;
+      box-shadow: 0 12px 18px rgba(0,0,0,.14);
+    }
+    @keyframes confettiFly{
+      0%{opacity:1; transform: translateY(18px) rotate(0deg);}
+      100%{opacity:0; transform: translateY(-180px) rotate(280deg);}
+    }
+
+    /* Locked chore badge */
+    .lockPill{
+      display:inline-block;
+      margin-left:8px;
+      padding:4px 8px;
+      border-radius:999px;
+      font-weight:1000;
+      font-size:.9rem;
+      background: rgba(2,6,23,.08);
+      border: var(--stroke) solid rgba(2,6,23,.08);
+      color:#0b1220;
+    }
   </style>
 </head>
 
 <body>
+
+  <!-- Fullscreen FX overlay -->
+  <div id="fxOverlay" class="fxOverlay" role="dialog" aria-modal="true" aria-label="Celebration">
+    <div class="fxCard">
+      <div id="fxConfettiLayer" class="fxConfettiLayer"></div>
+      <div id="fxEmoji" class="fxEmoji">⭐</div>
+      <div id="fxTitle" class="fxTitle">Great Job!</div>
+      <div id="fxSub" class="fxSub">Keep going.</div>
+      <div class="fxBtnRow">
+        <button class="btn btnBlue" id="fxCloseBtn" type="button">Continue</button>
+      </div>
+    </div>
+  </div>
+
   <div class="wrap">
     <div class="header">
       <div>
         <div class="titleWrap">
           <div class="robloxBadge" aria-hidden="true"></div>
           <div>
-            <h1><span id="kidNameTitle">Myles</span> Chore Chart</h1>
-            <p class="subtitle">Tap a chore to claim it. Parent approves or declines.</p>
+            <h1>Chore List</h1>
+            <p class="subtitle">Hold a red chore button for 3 seconds to claim it. Parent approves or declines.</p>
           </div>
         </div>
       </div>
@@ -423,12 +450,6 @@
     <!-- KID PAGE -->
     <div id="kidPage" class="grid">
       <div class="card" id="kidScoreCard">
-        <div class="fxLayer">
-          <div id="balloonFx" class="balloon">🎈</div>
-        </div>
-        <div id="starFx" class="starFx">⭐</div>
-        <div id="confettiLayer" class="confettiLayer"></div>
-
         <div class="starHero">
           <div class="starCountBig">
             <div class="starEmojiBig">⭐</div>
@@ -447,11 +468,18 @@
           </div>
         </div>
 
-        <div class="starsRow" id="starsRowKid"></div>
-
-        <div class="greatJobWrap">
-          <div id="greatJobMsg" class="greatJobMsg">Great Job!</div>
+        <!-- Progress bar -->
+        <div class="progressWrap">
+          <div class="progressTop">
+            <div>Progress</div>
+            <div><span id="progressTextKid">0/10 stars</span></div>
+          </div>
+          <div class="progressBar" aria-hidden="true">
+            <div id="progressFillKid" class="progressFill"></div>
+          </div>
         </div>
+
+        <div class="starsRow" id="starsRowKid"></div>
 
         <div class="goalLine">
           Daily goal <span class="goalPill" id="goalKidPill">8 ⭐</span>
@@ -459,13 +487,23 @@
         </div>
 
         <div class="statusLine" id="goalStatusKid"></div>
+
+        <div class="divider"></div>
+
+        <!-- Mystery chore button -->
+        <div class="sectionTitle" style="margin-bottom:8px;">Mystery Chore</div>
+        <div class="smallNote" id="mysteryNote">Ask a parent to add today’s mystery prompt.</div>
+        <div class="btnRow" style="justify-content:center;">
+          <button class="btn btnPurple" id="mysteryBtn" type="button">🎁 Mystery Chore</button>
+        </div>
       </div>
 
       <div class="card">
         <div class="sectionTitle">Chores</div>
         <div class="smallNote">
-          Red = not complete. Yellow = claimed (waiting for parent). Green = approved.
+          Red = hold to claim. Yellow = claimed (waiting for parent). Green = approved.
         </div>
+        <div class="holdHint">Hold a red button for 3 seconds to claim.</div>
         <ul id="kidChoreList"></ul>
       </div>
     </div>
@@ -536,6 +574,14 @@
 
             <div class="divider"></div>
 
+            <div class="sectionTitle">Reset the Day</div>
+            <div class="smallNote">Sets stars and strikes to 0 and turns all chores back to red.</div>
+            <div class="btnRow">
+              <button class="btn btnStrike" id="resetDayBtn" type="button">🔄 Reset Day</button>
+            </div>
+
+            <div class="divider"></div>
+
             <div class="sectionTitle">Manage Strikes</div>
             <div class="btnRow">
               <button class="btn btnStrike" id="addStrikeParentBtn" type="button">❌ Add Strike</button>
@@ -547,19 +593,31 @@
           <div class="card">
             <div class="sectionTitle">Chores & Settings</div>
 
-            <div class="sectionTitle" style="font-size:1.18rem; margin-top:2px;">Active Kid</div>
+            <div class="sectionTitle" style="font-size:1.18rem; margin-top:2px;">Mystery Chore Prompt (parent sets)</div>
+            <div class="smallNote">Kid can use it once per day.</div>
             <div class="formRow" style="justify-content:flex-start">
-              <select id="kidSelect">
-                <option value="Myles">Myles</option>
-                <option value="Nico">Nico</option>
+              <input id="mysteryPromptInput" class="inputWide" type="text" placeholder="Enter today’s mystery prompt" />
+              <button class="btn btnPurple" id="saveMysteryPromptBtn" type="button">Save Prompt</button>
+              <button class="btn btnGray" id="clearMysteryPromptBtn" type="button">Clear</button>
+            </div>
+            <div class="smallNote" style="margin-top:8px;">Current prompt: <span id="mysteryPromptStatus">None</span></div>
+
+            <div class="divider"></div>
+
+            <div class="sectionTitle" style="font-size:1.18rem; margin-top:2px;">Sound Effects</div>
+            <div class="formRow" style="justify-content:flex-start">
+              <label style="font-weight:1000; color:var(--muted); align-self:center;">Sounds</label>
+              <select id="soundSelect">
+                <option value="on">On</option>
+                <option value="off">Off</option>
               </select>
-              <button class="btn btnBlue" id="saveKidBtn" type="button">Save Kid</button>
+              <button class="btn btnBlue" id="saveSoundBtn" type="button">Save</button>
             </div>
 
             <div class="divider"></div>
 
             <div class="sectionTitle" style="font-size:1.18rem; margin-top:2px;">Default Chores (check to add)</div>
-            <div class="smallNote">Check items and click “Add Selected Defaults” to populate for the active kid.</div>
+            <div class="smallNote">Defaults are preloaded once. You can still add more or edit/delete anything else.</div>
             <div class="defaultPickWrap">
               <div class="defaultList" id="defaultChoreList"></div>
               <div class="btnRow">
@@ -570,7 +628,7 @@
 
             <div class="divider"></div>
 
-            <div class="sectionTitle" style="font-size:1.18rem; margin-top:2px;">Add Chore (for this kid)</div>
+            <div class="sectionTitle" style="font-size:1.18rem; margin-top:2px;">Add Chore</div>
             <div class="formRow" style="justify-content:flex-start">
               <input id="newChoreName" class="inputWide" type="text" placeholder="New chore name (e.g., Make bed)" />
               <button class="btn btnPurple" id="addChoreBtn" type="button">➕ Add</button>
@@ -579,12 +637,12 @@
             <div class="divider"></div>
 
             <div class="sectionTitle">Edit / Delete / Reset</div>
-            <div class="smallNote">Reset “today status” sends the chore back to red.</div>
+            <div class="smallNote">Locked chores cannot be renamed or deleted.</div>
             <ul id="parentChoreList"></ul>
 
             <div class="divider"></div>
 
-            <div class="sectionTitle">Chart Settings (shared)</div>
+            <div class="sectionTitle">Chart Settings</div>
             <div class="formRow" style="justify-content:flex-start">
               <label style="font-weight:1000; color:var(--muted); align-self:center;">Points per chore</label>
               <input id="pointsPerChore" class="inputSmall" type="number" min="1" step="1" />
@@ -614,15 +672,39 @@
 
 <script>
 (() => {
-  const STORAGE_KEY = "kids_chore_chart_roblox_theme_v6_10stars_no_unlockables_fixedpass";
+  const STORAGE_KEY = "kids_chore_chart_v9_fullscreen_fx_locked_top3";
 
   const MAX_STARS = 10;
   const STRIKES_MAX = 3;
 
-  // Default chores
+  // Locked chores (must exist and must stay at the top in this order)
+  const LOCKED_TOP = [
+    { key: "locked_ask",   name: "Ask mom/dad for a chore" },
+    { key: "locked_bed",   name: "Make bed, get dressed, and eat breakfast" },
+    { key: "locked_teeth", name: "Brush teeth in the morning" }
+  ];
+
+  const PRAISE = [
+    "Awesome work!",
+    "You crushed it!",
+    "Nice job, superstar!",
+    "Boom! Done!",
+    "Way to go!",
+    "High five!",
+    "You did it!",
+    "Super helper!",
+    "That was amazing!",
+    "Great hustle!"
+  ];
+
+  // Defaults (first 10 will auto-populate ONE time if list is empty,
+  // but LOCKED_TOP always pins to the top even if user adds/edits others)
   const DEFAULT_CHORE_TEMPLATES = [
+    // Include the locked ones here too; logic will de-dupe and lock
+    "Ask mom/dad for a chore",
     "Make bed, get dressed, and eat breakfast",
     "Brush teeth in the morning",
+
     "Put dishes in the sink (or dishwasher)",
     "Pick up toys and clean your room floor",
     "Pack backpack / get school stuff ready",
@@ -631,57 +713,59 @@
     "Brush teeth at night",
     "Put dirty clothes in the hamper",
     "Complete homework",
-    "Ask mom/dad for a chore",
     "Make a craft"
   ];
 
-  const defaultKid = () => ({
+  const defaultState = () => ({
     chores: [],
     points: 0,
     strikes: 0,
-    lastDateKey: dateKey(new Date())
+    lastDateKey: dateKey(new Date()),
+    lastPerfectDayKey: "",
+    mysteryUsedKey: ""
   });
 
   const defaults = {
-    activeKid: "Myles",
-    kids: {
-      Myles: defaultKid(),
-      Nico: defaultKid()
-    },
-    // Stars are derived from points using pointsPerChore:
-    // 1 chore = +pointsPerChore points AND 1 star = pointsPerChore points
     pointsPerChore: 10,
     dailyGoalStars: 8,
     autoDailyReset: "on",
-    parentPasscode: "123" // fixed, not displayed, not changeable
+    parentPasscode: "123", // fixed, not shown, not changeable
+    soundOn: true,
+    mysteryPrompt: "",
+    state: defaultState()
   };
 
-  let state = loadState();
+  let app = loadState();
   let unlocked = false;
 
-  // --- Elements (kid)
+  // Tabs/pages
   const kidTabBtn = document.getElementById("kidTabBtn");
   const parentTabBtn = document.getElementById("parentTabBtn");
   const kidPage = document.getElementById("kidPage");
   const parentPage = document.getElementById("parentPage");
 
-  const kidNameTitle = document.getElementById("kidNameTitle");
+  // Kid elements
   const starsBigKid = document.getElementById("starsBigKid");
   const strikesKid = document.getElementById("strikesKid");
   const starsRowKid = document.getElementById("starsRowKid");
   const goalStatusKid = document.getElementById("goalStatusKid");
   const goalKidPill = document.getElementById("goalKidPill");
   const kidChoreList = document.getElementById("kidChoreList");
+  const progressTextKid = document.getElementById("progressTextKid");
+  const progressFillKid = document.getElementById("progressFillKid");
 
-  const balloonFx = document.getElementById("balloonFx");
-  const starFx = document.getElementById("starFx");
-  const kidScoreCard = document.getElementById("kidScoreCard");
-  const confettiLayer = document.getElementById("confettiLayer");
+  const mysteryBtn = document.getElementById("mysteryBtn");
+  const mysteryNote = document.getElementById("mysteryNote");
 
-  const greatJobMsg = document.getElementById("greatJobMsg");
-  let greatJobTimer = null;
+  // Fullscreen FX overlay
+  const fxOverlay = document.getElementById("fxOverlay");
+  const fxConfettiLayer = document.getElementById("fxConfettiLayer");
+  const fxEmoji = document.getElementById("fxEmoji");
+  const fxTitle = document.getElementById("fxTitle");
+  const fxSub = document.getElementById("fxSub");
+  const fxCloseBtn = document.getElementById("fxCloseBtn");
 
-  // --- Elements (parent)
+  // Parent elements
   const parentPassInput = document.getElementById("parentPassInput");
   const unlockBtn = document.getElementById("unlockBtn");
   const lockBtn = document.getElementById("lockBtn");
@@ -699,6 +783,8 @@
   const approveSelectedBtn = document.getElementById("approveSelectedBtn");
   const declineSelectedBtn = document.getElementById("declineSelectedBtn");
 
+  const resetDayBtn = document.getElementById("resetDayBtn");
+
   const newChoreName = document.getElementById("newChoreName");
   const addChoreBtn = document.getElementById("addChoreBtn");
   const parentChoreList = document.getElementById("parentChoreList");
@@ -712,33 +798,39 @@
   const dailyGoalStars = document.getElementById("dailyGoalStars");
   const saveSettingsBtn = document.getElementById("saveSettingsBtn");
 
-  const kidSelect = document.getElementById("kidSelect");
-  const saveKidBtn = document.getElementById("saveKidBtn");
-
   const defaultChoreList = document.getElementById("defaultChoreList");
   const addSelectedDefaultsBtn = document.getElementById("addSelectedDefaultsBtn");
   const clearDefaultChecksBtn = document.getElementById("clearDefaultChecksBtn");
 
   const manualSaveBtn = document.getElementById("manualSaveBtn");
 
-  // Daily reset check (per kid)
+  const mysteryPromptInput = document.getElementById("mysteryPromptInput");
+  const saveMysteryPromptBtn = document.getElementById("saveMysteryPromptBtn");
+  const clearMysteryPromptBtn = document.getElementById("clearMysteryPromptBtn");
+  const mysteryPromptStatus = document.getElementById("mysteryPromptStatus");
+
+  const soundSelect = document.getElementById("soundSelect");
+  const saveSoundBtn = document.getElementById("saveSoundBtn");
+
+  // Ensure schema + enforce locked top chores
+  hardenApp();
+
+  // Daily reset
   maybeDailyReset();
 
-  // Render static picker
+  // Populate defaults once if empty
+  autopopulateDefaultsOnce();
+
+  // Default picker
   renderDefaultChorePicker();
 
-  // --- Tabs (kid-proof parent tab)
+  // Tabs: auto-lock parent on return to kid
   kidTabBtn.addEventListener("click", () => showTab("kid"));
-  parentTabBtn.addEventListener("click", () => {
-    // If not unlocked, do not allow staying on parent page
-    showTab("parent");
-    if(!unlocked){
-      toast("Ask a parent");
-    }
-  });
+  parentTabBtn.addEventListener("click", () => { showTab("parent"); if(!unlocked) toast("Ask a parent"); });
 
   function showTab(which){
     if(which === "kid"){
+      forceLockParent();
       kidPage.classList.remove("hidden");
       parentPage.classList.add("hidden");
       kidTabBtn.classList.add("tabActive");
@@ -752,9 +844,16 @@
     }
   }
 
-  // --- Parent unlock/lock
+  function forceLockParent(){
+    unlocked = false;
+    parentControls.classList.add("hidden");
+    parentLockedNote.textContent = "Locked.";
+    parentPassInput.value = "";
+  }
+
+  // Unlock/lock
   unlockBtn.addEventListener("click", () => {
-    if(parentPassInput.value === state.parentPasscode){
+    if(parentPassInput.value === app.parentPasscode){
       unlocked = true;
       parentControls.classList.remove("hidden");
       parentLockedNote.textContent = "Unlocked.";
@@ -762,58 +861,129 @@
       renderAll();
       toast("Unlocked");
     } else {
-      unlocked = false;
-      parentControls.classList.add("hidden");
+      forceLockParent();
       parentLockedNote.textContent = "Wrong passcode.";
       toast("Wrong passcode");
+      if(app.soundOn) sfx("error");
     }
   });
 
   lockBtn.addEventListener("click", () => {
-    unlocked = false;
-    parentControls.classList.add("hidden");
-    parentLockedNote.textContent = "Locked.";
-    parentPassInput.value = "";
+    forceLockParent();
     toast("Locked");
   });
 
-  // --- Parent: choose kid
-  saveKidBtn.addEventListener("click", () => {
-    if(!unlocked) return;
-    const v = kidSelect.value === "Nico" ? "Nico" : "Myles";
-    state.activeKid = v;
-    saveState();
+  // FX overlay close
+  fxCloseBtn.addEventListener("click", closeFx);
+  fxOverlay.addEventListener("click", (e) => { if(e.target === fxOverlay) closeFx(); });
+  function closeFx(){ fxOverlay.style.display = "none"; }
+
+  // Mystery button: must STATE what it is, fullscreen, then add chore
+  mysteryBtn.addEventListener("click", () => {
+    const prompt = (app.mysteryPrompt || "").trim();
+    const today = dateKey(new Date());
+
+    if(!prompt){
+      toast("Ask a parent for today’s prompt");
+      if(app.soundOn) sfx("error");
+      return;
+    }
+    if(app.state.mysteryUsedKey === today){
+      toast("Already used today");
+      if(app.soundOn) sfx("error");
+      return;
+    }
+
+    // Show fullscreen overlay stating the prompt
+    showFx({
+      emoji: "🎁",
+      title: "Mystery Chore!",
+      sub: prompt,
+      confetti: true,
+      sound: "mystery"
+    });
+
+    // Add chore
+    app.state.chores.push({
+      id: rid(),
+      name: "🎁 " + prompt,
+      statusToday: "pending",
+      approvedAllTime: 0,
+      createdAt: Date.now(),
+      locked: false,
+      lockKey: ""
+    });
+
+    app.state.mysteryUsedKey = today;
+
+    saveApp();
     renderAll();
-    toast("Kid selected");
   });
 
-  // --- Parent: add selected defaults
+  // Parent: save/clear mystery prompt
+  saveMysteryPromptBtn.addEventListener("click", () => {
+    if(!unlocked) return;
+    const p = (mysteryPromptInput.value || "").trim();
+    if(!p) return toast("Enter a prompt");
+    app.mysteryPrompt = p;
+
+    // Reset used today so it works immediately
+    app.state.mysteryUsedKey = "";
+
+    saveApp();
+    renderAll();
+    toast("Mystery prompt saved");
+  });
+
+  clearMysteryPromptBtn.addEventListener("click", () => {
+    if(!unlocked) return;
+    app.mysteryPrompt = "";
+    saveApp();
+    renderAll();
+    toast("Mystery prompt cleared");
+  });
+
+  // Parent: sound
+  saveSoundBtn.addEventListener("click", () => {
+    if(!unlocked) return;
+    app.soundOn = (soundSelect.value === "on");
+    saveApp();
+    toast("Sound saved");
+  });
+
+  // Parent: add selected defaults
   addSelectedDefaultsBtn.addEventListener("click", () => {
     if(!unlocked) return;
     const checked = [...defaultChoreList.querySelectorAll("input[type='checkbox']:checked")];
     if(checked.length === 0) return toast("Check at least one default chore");
 
-    const kid = activeKidState();
     let added = 0;
-
     checked.forEach(cb => {
-      const name = cb.getAttribute("data-name") || "";
+      const name = (cb.getAttribute("data-name") || "").trim();
       if(!name) return;
 
-      const exists = kid.chores.some(c => (c.name || "").trim().toLowerCase() === name.trim().toLowerCase());
-      if(exists) return;
+      // If matches locked chore, ensure it exists locked (do not add duplicate)
+      const lockHit = LOCKED_TOP.find(x => x.name.toLowerCase() === name.toLowerCase());
+      if(lockHit){
+        ensureLockedTopExists();
+        return;
+      }
 
-      kid.chores.push({
+      if(app.state.chores.some(c => norm(c.name) === norm(name))) return;
+
+      app.state.chores.push({
         id: rid(),
         name,
         statusToday: "pending",
         approvedAllTime: 0,
-        createdAt: Date.now()
+        createdAt: Date.now() + Math.floor(Math.random()*10),
+        locked: false,
+        lockKey: ""
       });
       added += 1;
     });
 
-    saveState();
+    saveApp();
     renderAll();
     toast(added > 0 ? `Added ${added} chore(s)` : "Already added");
   });
@@ -824,62 +994,62 @@
     toast("Cleared");
   });
 
-  // --- Parent: add chore (duplicate prevention)
+  // Parent: add chore
   addChoreBtn.addEventListener("click", () => {
     if(!unlocked) return;
     const name = (newChoreName.value || "").trim();
     if(!name) return;
 
-    const kid = activeKidState();
-    const exists = kid.chores.some(c => (c.name || "").trim().toLowerCase() === name.trim().toLowerCase());
-    if(exists) return toast("Already added");
+    // If user tries to add locked name, just enforce locked
+    const lockHit = LOCKED_TOP.find(x => x.name.toLowerCase() === name.toLowerCase());
+    if(lockHit){
+      ensureLockedTopExists();
+      newChoreName.value = "";
+      saveApp();
+      renderAll();
+      toast("Locked chore is already at the top");
+      return;
+    }
 
-    kid.chores.push({
+    if(app.state.chores.some(c => norm(c.name) === norm(name))) return toast("Already added");
+
+    app.state.chores.push({
       id: rid(),
       name,
       statusToday: "pending",
       approvedAllTime: 0,
-      createdAt: Date.now()
+      createdAt: Date.now(),
+      locked: false,
+      lockKey: ""
     });
 
     newChoreName.value = "";
-    saveState();
+    saveApp();
     renderAll();
     toast("Chore added");
   });
 
-  // --- Parent: strikes (parent-only)
+  // Parent: strikes
   addStrikeParentBtn.addEventListener("click", () => addStrike());
   undoStrikeBtn.addEventListener("click", () => {
     if(!unlocked) return;
-    const kid = activeKidState();
-    kid.strikes = clampInt(kid.strikes - 1, 0, STRIKES_MAX);
-    saveState();
-    renderAll();
-    toast("Strike undone");
+    app.state.strikes = clampInt(app.state.strikes - 1, 0, STRIKES_MAX);
+    saveApp(); renderAll(); toast("Strike undone");
   });
   clearStrikesBtn.addEventListener("click", () => {
     if(!unlocked) return;
-    const kid = activeKidState();
-    kid.strikes = 0;
-    saveState();
-    renderAll();
-    toast("Strikes cleared");
+    app.state.strikes = 0;
+    saveApp(); renderAll(); toast("Strikes cleared");
   });
 
-  // --- Parent: approve/decline batch controls
+  // Parent: approve/decline
   approveAllBtn.addEventListener("click", () => {
     if(!unlocked) return;
-    const kid = activeKidState();
-    const claimed = kid.chores.filter(c => c.statusToday === "claimed");
+    const claimed = app.state.chores.filter(c => c.statusToday === "claimed");
     if(claimed.length === 0) return toast("No claimed chores");
-    claimed.forEach(c => {
-      c.statusToday = "approved";
-      c.approvedAllTime += 1;
-    });
-    saveState();
-    renderAll();
-    toast("Approved all ✅");
+    claimed.forEach(c => { c.statusToday = "approved"; c.approvedAllTime += 1; });
+    saveApp(); renderAll(); toast("Approved all ✅");
+    if(app.soundOn) sfx("approve");
   });
 
   approveSelectedBtn.addEventListener("click", () => {
@@ -903,22 +1073,29 @@
     return cbs.map(cb => cb.getAttribute("data-id")).filter(Boolean);
   }
 
-  // --- Parent: settings (shared)
+  // Parent: reset day
+  resetDayBtn.addEventListener("click", () => {
+    if(!unlocked) return;
+    resetDay();
+    saveApp();
+    renderAll();
+    toast("Day reset");
+  });
+
+  // Parent: settings
   saveSettingsBtn.addEventListener("click", () => {
     if(!unlocked) return;
-
-    state.pointsPerChore = clampInt(pointsPerChore.value, 1, 100);
-    state.autoDailyReset = autoResetSelect.value === "off" ? "off" : "on";
-    state.dailyGoalStars = clampInt(dailyGoalStars.value, 1, MAX_STARS);
-
-    saveState();
+    app.pointsPerChore = clampInt(pointsPerChore.value, 1, 100);
+    app.autoDailyReset = autoResetSelect.value === "off" ? "off" : "on";
+    app.dailyGoalStars = clampInt(dailyGoalStars.value, 1, MAX_STARS);
+    saveApp();
     renderAll();
     toast("Saved settings");
   });
 
   manualSaveBtn.addEventListener("click", () => {
     if(!unlocked) return;
-    saveState();
+    saveApp();
     toast("Saved");
   });
 
@@ -926,163 +1103,241 @@
   renderAll();
 
   // ---------------- Core logic ----------------
-  function activeKidName(){
-    return (state.activeKid === "Nico") ? "Nico" : "Myles";
-  }
-
-  function activeKidState(){
-    const k = activeKidName();
-    if(!state.kids) state.kids = {};
-    if(!state.kids.Myles) state.kids.Myles = defaultKid();
-    if(!state.kids.Nico) state.kids.Nico = defaultKid();
-    if(!state.kids[k]) state.kids[k] = defaultKid();
-    if(!Array.isArray(state.kids[k].chores)) state.kids[k].chores = [];
-    return state.kids[k];
-  }
-
   function claimChore(choreId){
-    const kid = activeKidState();
-    const c = kid.chores.find(x => x.id === choreId);
+    const c = app.state.chores.find(x => x.id === choreId);
     if(!c) return;
-
     if(c.statusToday !== "pending") return;
+
     c.statusToday = "claimed";
 
-    const beforeStars = starsFromPoints(kid.points);
-    addPoints(kid, state.pointsPerChore);
-    const afterStars = starsFromPoints(kid.points);
+    const beforeStars = starsFromPoints(app.state.points);
+    addPoints(app.state, app.pointsPerChore);
+    const afterStars = starsFromPoints(app.state.points);
 
-    saveState();
+    saveApp();
     renderAll();
 
-    showGreatJob();
-    confettiBurst();
+    const praise = PRAISE[Math.floor(Math.random()*PRAISE.length)];
+    showFx({
+      emoji: afterStars > beforeStars ? "⭐" : "🎉",
+      title: praise,
+      sub: afterStars > beforeStars ? "Star earned!" : "Claimed!",
+      confetti: true,
+      sound: afterStars > beforeStars ? "star" : "claim"
+    });
 
-    if(afterStars > beforeStars){
-      megaStarCelebrate();
-      toast("Star earned!");
-    } else {
-      burstAt(kidScoreCard);
-      toast("Claimed!");
-    }
+    maybePerfectDayCelebrate(beforeStars, afterStars);
   }
 
   function approveChore(choreId){
     if(!unlocked) return;
-    const kid = activeKidState();
-    const c = kid.chores.find(x => x.id === choreId);
+    const c = app.state.chores.find(x => x.id === choreId);
     if(!c) return;
-
     if(c.statusToday !== "claimed") return;
+
     c.statusToday = "approved";
     c.approvedAllTime += 1;
 
-    saveState();
+    saveApp();
     renderAll();
+    if(app.soundOn) sfx("approve");
   }
 
   function declineChore(choreId){
     if(!unlocked) return;
-    const kid = activeKidState();
-    const c = kid.chores.find(x => x.id === choreId);
+    const c = app.state.chores.find(x => x.id === choreId);
     if(!c) return;
-
     if(c.statusToday !== "claimed") return;
 
-    const beforeStars = starsFromPoints(kid.points);
-    addPoints(kid, -state.pointsPerChore);
-    const afterStars = starsFromPoints(kid.points);
+    const beforeStars = starsFromPoints(app.state.points);
+    addPoints(app.state, -app.pointsPerChore);
+    const afterStars = starsFromPoints(app.state.points);
 
     c.statusToday = "pending";
 
-    saveState();
+    saveApp();
     renderAll();
 
-    if(afterStars < beforeStars){
-      burstAt(kidScoreCard);
-    }
+    showFx({
+      emoji: "❌",
+      title: "Declined",
+      sub: (afterStars < beforeStars) ? "Star removed." : "Reset to red.",
+      confetti: false,
+      sound: "decline"
+    });
   }
 
   function resetTodayStatus(choreId){
     if(!unlocked) return;
-    const kid = activeKidState();
-    const c = kid.chores.find(x => x.id === choreId);
+    const c = app.state.chores.find(x => x.id === choreId);
     if(!c) return;
 
     if(c.statusToday === "claimed"){
-      addPoints(kid, -state.pointsPerChore);
+      addPoints(app.state, -app.pointsPerChore);
     }
     c.statusToday = "pending";
-    saveState();
+    saveApp();
     renderAll();
     toast("Reset to red");
   }
 
-  function addPoints(kid, delta){
-    const maxPoints = MAX_STARS * clampInt(state.pointsPerChore, 1, 100);
-    kid.points = clampInt(kid.points + delta, 0, maxPoints);
+  function addPoints(state, delta){
+    const maxPoints = MAX_STARS * clampInt(app.pointsPerChore, 1, 100);
+    state.points = clampInt(state.points + delta, 0, maxPoints);
   }
 
   function starsFromPoints(points){
-    const pps = clampInt(state.pointsPerChore, 1, 100);
+    const pps = clampInt(app.pointsPerChore, 1, 100);
     return clampInt(Math.floor(points / pps), 0, MAX_STARS);
   }
 
   function addStrike(){
     if(!unlocked) return;
-    const kid = activeKidState();
 
-    balloonPopHuge();
+    app.state.strikes = clampInt(app.state.strikes + 1, 0, STRIKES_MAX);
 
-    kid.strikes = clampInt(kid.strikes + 1, 0, STRIKES_MAX);
+    if(app.soundOn) sfx("strike");
 
-    if(kid.strikes >= STRIKES_MAX){
-      kid.strikes = 0;
-      const beforeStars = starsFromPoints(kid.points);
+    if(app.state.strikes >= STRIKES_MAX){
+      app.state.strikes = 0;
+      const beforeStars = starsFromPoints(app.state.points);
       if(beforeStars > 0){
-        addPoints(kid, -state.pointsPerChore);
-        burstAt(kidScoreCard);
-        toast("3 strikes! 1 star lost.");
-      } else {
-        toast("3 strikes!");
+        addPoints(app.state, -app.pointsPerChore);
+        saveApp();
+        renderAll();
+        showFx({ emoji:"🎈", title:"3 Strikes!", sub:"1 star lost.", confetti:true, sound:"lose" });
+        return;
       }
-    } else {
-      toast("Strike added");
+      saveApp(); renderAll();
+      showFx({ emoji:"🎈", title:"3 Strikes!", sub:"Be careful next time.", confetti:false, sound:"strike" });
+      return;
     }
 
-    saveState();
+    saveApp();
     renderAll();
+    showFx({ emoji:"🎈", title:"Strike Added", sub:`${app.state.strikes}/3`, confetti:false, sound:"strike" });
+  }
+
+  function resetDay(){
+    app.state.points = 0;
+    app.state.strikes = 0;
+    app.state.chores.forEach(c => c.statusToday = "pending");
+    app.state.lastPerfectDayKey = "";
+    app.state.mysteryUsedKey = "";
+    app.state.lastDateKey = dateKey(new Date());
   }
 
   function maybeDailyReset(){
-    if(state.autoDailyReset !== "on") return;
+    if(app.autoDailyReset !== "on") return;
 
     const today = dateKey(new Date());
-    ["Myles","Nico"].forEach(name => {
-      const kid = (state.kids && state.kids[name]) ? state.kids[name] : null;
-      if(!kid) return;
-      if(kid.lastDateKey !== today){
-        kid.points = 0;
-        kid.strikes = 0;
-        if(Array.isArray(kid.chores)) kid.chores.forEach(c => c.statusToday = "pending");
-        kid.lastDateKey = today;
+    if(app.state.lastDateKey !== today){
+      resetDay();
+      saveApp();
+    }
+  }
+
+  // ---------------- Locked top chores enforcement ----------------
+  function ensureLockedTopExists(){
+    // Add missing locked chores and enforce correct keys/names
+    LOCKED_TOP.forEach((lt, idx) => {
+      const existingByKey = app.state.chores.find(c => c.lockKey === lt.key);
+      if(existingByKey){
+        existingByKey.name = lt.name;
+        existingByKey.locked = true;
+        return;
       }
+
+      // If exists by name but not locked, convert it
+      const existingByName = app.state.chores.find(c => norm(c.name) === norm(lt.name));
+      if(existingByName){
+        existingByName.locked = true;
+        existingByName.lockKey = lt.key;
+        existingByName.name = lt.name;
+        return;
+      }
+
+      // else add it
+      app.state.chores.push({
+        id: rid(),
+        name: lt.name,
+        statusToday: "pending",
+        approvedAllTime: 0,
+        createdAt: Date.now() + idx, // stable ordering
+        locked: true,
+        lockKey: lt.key
+      });
     });
 
-    saveState();
+    // If any locked chores have duplicate names, keep one locked and rename duplicates (rare, but safe)
+    const seen = new Set();
+    app.state.chores.forEach(c => {
+      const n = norm(c.name);
+      if(seen.has(n) && c.locked){
+        // keep locked, but if duplicate locked, change to non-locked copy
+        c.locked = false;
+        c.lockKey = "";
+      } else {
+        seen.add(n);
+      }
+    });
+  }
+
+  function autopopulateDefaultsOnce(){
+    if(app.state.chores.length > 0) {
+      // still enforce locked top
+      ensureLockedTopExists();
+      saveApp();
+      return;
+    }
+
+    // Start with the locked top (in order), then fill until 10 items total (including locked)
+    ensureLockedTopExists();
+
+    const wantCount = 10;
+    const candidates = DEFAULT_CHORE_TEMPLATES
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    for(const name of candidates){
+      if(app.state.chores.length >= wantCount) break;
+
+      // skip if already exists (locked or not)
+      if(app.state.chores.some(c => norm(c.name) === norm(name))) continue;
+
+      // do not add locked by name here; ensureLockedTopExists handles them
+      const lockHit = LOCKED_TOP.find(x => norm(x.name) === norm(name));
+      if(lockHit) continue;
+
+      app.state.chores.push({
+        id: rid(),
+        name,
+        statusToday: "pending",
+        approvedAllTime: 0,
+        createdAt: Date.now() + Math.floor(Math.random()*10),
+        locked: false,
+        lockKey: ""
+      });
+    }
+
+    // If still less than 10, that's OK (but should not happen with given list)
+    ensureLockedTopExists();
+    saveApp();
   }
 
   // ---------------- UI rendering ----------------
   function renderAll(){
-    const kidName = activeKidName();
-    const kid = activeKidState();
-    const stars = starsFromPoints(kid.points);
+    ensureLockedTopExists();
 
-    kidNameTitle.textContent = kidName;
+    const stars = starsFromPoints(app.state.points);
 
     starsBigKid.textContent = stars;
-    strikesKid.textContent = kid.strikes;
-    goalKidPill.textContent = `${state.dailyGoalStars} ⭐`;
+    strikesKid.textContent = app.state.strikes;
+    goalKidPill.textContent = `${app.dailyGoalStars} ⭐`;
+
+    // Progress bar
+    progressTextKid.textContent = `${stars}/${MAX_STARS} stars`;
+    progressFillKid.style.width = `${Math.round((stars / MAX_STARS) * 100)}%`;
 
     // stars row
     starsRowKid.innerHTML = "";
@@ -1094,19 +1349,51 @@
     }
 
     // goal line
-    const goal = clampInt(state.dailyGoalStars, 1, MAX_STARS);
+    const goal = clampInt(app.dailyGoalStars, 1, MAX_STARS);
     goalStatusKid.textContent =
       (stars >= MAX_STARS) ? "Perfect day: 10 stars!"
       : (stars >= goal) ? `Goal reached: ${stars} stars (goal is ${goal}).`
       : `You have ${stars} stars. Goal is ${goal}.`;
 
-    // chores list: pending first, then claimed, then approved (stable by createdAt)
+    // Mystery note
+    const today = dateKey(new Date());
+    const prompt = (app.mysteryPrompt || "").trim();
+    const usedToday = (app.state.mysteryUsedKey === today);
+    if(!prompt){
+      mysteryNote.textContent = "Ask a parent to add today’s mystery prompt.";
+      mysteryBtn.disabled = true;
+    } else if(usedToday){
+      mysteryNote.textContent = "Mystery chore used today. Come back tomorrow.";
+      mysteryBtn.disabled = true;
+    } else {
+      mysteryNote.textContent = `Tap to reveal: "${prompt}"`;
+      mysteryBtn.disabled = false;
+    }
+
+    // Chores list (LOCKED_TOP pinned first, then pending, claimed, approved)
     kidChoreList.innerHTML = "";
 
-    const sorted = [...kid.chores].sort((a,b) => {
-      const w = s => (s === "pending" ? 0 : (s === "claimed" ? 1 : 2));
-      const d = w(a.statusToday) - w(b.statusToday);
-      if(d !== 0) return d;
+    const orderWeight = (c) => {
+      if(c.locked) return -10; // always top
+      return (c.statusToday === "pending") ? 0 : (c.statusToday === "claimed" ? 1 : 2);
+    };
+
+    const lockIndex = (c) => {
+      const i = LOCKED_TOP.findIndex(x => x.key === c.lockKey);
+      return (i >= 0) ? i : 999;
+    };
+
+    const sorted = [...app.state.chores].sort((a,b) => {
+      const wa = orderWeight(a), wb = orderWeight(b);
+      if(wa !== wb) return wa - wb;
+
+      // within locked, enforce fixed order
+      if(a.locked && b.locked){
+        const la = lockIndex(a), lb = lockIndex(b);
+        if(la !== lb) return la - lb;
+      }
+
+      // otherwise stable-ish
       const ca = Number(a.createdAt) || 0;
       const cb = Number(b.createdAt) || 0;
       if(ca !== cb) return ca - cb;
@@ -1118,7 +1405,7 @@
       li.className = "choreItem";
 
       const meta =
-        c.statusToday === "pending"  ? "Status: Not complete"
+        c.statusToday === "pending"  ? "Status: Red"
         : c.statusToday === "claimed" ? "Status: Waiting for parent"
         : "Status: Approved";
 
@@ -1127,35 +1414,42 @@
         : c.statusToday === "claimed" ? "btnYellow"
         : "btnGreen";
 
+      // Red button has no “not complete” wording
       const btnText =
-        c.statusToday === "pending" ? "Not complete"
+        c.statusToday === "pending" ? "&nbsp;"
         : c.statusToday === "claimed" ? "✅ Claimed (waiting)"
         : "✅ Approved";
-
-      const disabled = (c.statusToday !== "pending") ? "disabled" : "";
 
       const statusIcon =
         c.statusToday === "pending" ? "🔴"
         : c.statusToday === "claimed" ? "🟡"
         : "🟢";
 
+      const disabled = (c.statusToday !== "pending") ? "disabled" : "";
+
+      const lockTag = c.locked ? `<span class="lockPill">LOCKED</span>` : "";
+
       li.innerHTML = `
         <div class="choreTop">
-          <div class="choreName">${statusIcon} ${escapeHtml(c.name)}</div>
+          <div class="choreName">${statusIcon} ${escapeHtml(c.name)} ${lockTag}</div>
           <div class="choreMeta">${meta}</div>
         </div>
         <div class="btnRow">
-          <button class="btn ${btnClass}" type="button" ${disabled}>
+          <button class="btn ${btnClass} ${c.statusToday === "pending" ? "holdable" : ""}" type="button" ${disabled}
+                  aria-label="${c.statusToday === "pending" ? "Hold 3 seconds to claim" : "Status"}">
             ${btnText}
           </button>
         </div>
       `;
 
-      li.querySelector("button").addEventListener("click", () => claimChore(c.id));
+      const btn = li.querySelector("button");
+      if(c.statusToday === "pending"){
+        attachHoldToClaim(btn, () => claimChore(c.id));
+      }
+
       kidChoreList.appendChild(li);
     });
 
-    // Parent renders only when unlocked (but parent page can still show login card)
     if(unlocked){
       renderParentSummary();
       renderParentReview();
@@ -1165,18 +1459,16 @@
   }
 
   function renderParentSummary(){
-    const kid = activeKidState();
-    const stars = starsFromPoints(kid.points);
+    const stars = starsFromPoints(app.state.points);
     starsBigParent.textContent = stars;
-    strikesParent.textContent = kid.strikes;
+    strikesParent.textContent = app.state.strikes;
 
     let pending=0, claimed=0, approved=0;
-    kid.chores.forEach(c => {
+    app.state.chores.forEach(c => {
       if(c.statusToday === "pending") pending++;
       else if(c.statusToday === "claimed") claimed++;
       else approved++;
     });
-
     countPending.textContent = pending;
     countClaimed.textContent = claimed;
     countApproved.textContent = approved;
@@ -1184,9 +1476,8 @@
 
   function renderParentReview(){
     parentReviewList.innerHTML = "";
-    const kid = activeKidState();
+    const claimedChores = app.state.chores.filter(c => c.statusToday === "claimed");
 
-    const claimedChores = kid.chores.filter(c => c.statusToday === "claimed");
     if(claimedChores.length === 0){
       const li = document.createElement("li");
       li.className = "choreItem";
@@ -1220,9 +1511,28 @@
 
   function renderParentChores(){
     parentChoreList.innerHTML = "";
-    const kid = activeKidState();
 
-    kid.chores.forEach(c => {
+    // Show in same order as kid list (locked top first)
+    const orderWeight = (c) => c.locked ? -10 : (c.statusToday === "pending" ? 0 : (c.statusToday === "claimed" ? 1 : 2));
+    const lockIndex = (c) => {
+      const i = LOCKED_TOP.findIndex(x => x.key === c.lockKey);
+      return (i >= 0) ? i : 999;
+    };
+
+    const sorted = [...app.state.chores].sort((a,b) => {
+      const wa = orderWeight(a), wb = orderWeight(b);
+      if(wa !== wb) return wa - wb;
+      if(a.locked && b.locked){
+        const la = lockIndex(a), lb = lockIndex(b);
+        if(la !== lb) return la - lb;
+      }
+      const ca = Number(a.createdAt) || 0;
+      const cb = Number(b.createdAt) || 0;
+      if(ca !== cb) return ca - cb;
+      return String(a.name||"").localeCompare(String(b.name||""));
+    });
+
+    sorted.forEach(c => {
       const li = document.createElement("li");
       li.className = "choreItem";
 
@@ -1231,20 +1541,22 @@
         : c.statusToday === "claimed" ? `🟡 Yellow`
         : `🟢 Green`;
 
+      const lockTag = c.locked ? `<span class="lockPill">LOCKED</span>` : "";
+
       li.innerHTML = `
         <div class="choreTop">
           <div style="flex:1; min-width:240px;">
-            <div class="smallNote" style="margin:0 0 6px;">Name</div>
-            <input class="inputWide" data-id="${escapeAttr(c.id)}" type="text" value="${escapeAttr(c.name)}" />
+            <div class="smallNote" style="margin:0 0 6px;">Name ${lockTag}</div>
+            <input class="inputWide" data-id="${escapeAttr(c.id)}" type="text" value="${escapeAttr(c.name)}" ${c.locked ? "disabled" : ""} />
             <div style="margin-top:8px; font-weight:950; color: var(--muted);">${statusChip}</div>
           </div>
           <div class="choreMeta">Approved all-time: ${c.approvedAllTime}</div>
         </div>
 
         <div class="btnRow">
-          <button class="btn btnBlue" type="button">💾 Save Name</button>
+          <button class="btn btnBlue" type="button" ${c.locked ? "disabled" : ""}>💾 Save Name</button>
           <button class="btn btnGray" type="button">↩️ Reset Today Status</button>
-          <button class="btn btnStrike" type="button">🗑 Delete</button>
+          <button class="btn btnStrike" type="button" ${c.locked ? "disabled" : ""}>🗑 Delete</button>
         </div>
       `;
 
@@ -1252,15 +1564,21 @@
       const [saveBtn, resetBtn2, delBtn] = li.querySelectorAll("button");
 
       saveBtn.addEventListener("click", () => {
+        if(c.locked) return toast("Locked chore");
         const newName = (input.value || "").trim();
         if(!newName) return toast("Enter a name");
 
-        const kid2 = activeKidState();
-        const exists = kid2.chores.some(x => x.id !== c.id && (x.name||"").trim().toLowerCase() === newName.toLowerCase());
+        // prevent renaming into locked names
+        if(LOCKED_TOP.some(x => norm(x.name) === norm(newName))){
+          ensureLockedTopExists();
+          return toast("That name is reserved (locked top chore).");
+        }
+
+        const exists = app.state.chores.some(x => x.id !== c.id && norm(x.name) === norm(newName));
         if(exists) return toast("Duplicate name");
 
         c.name = newName;
-        saveState();
+        saveApp();
         renderAll();
         toast("Saved");
       });
@@ -1268,12 +1586,12 @@
       resetBtn2.addEventListener("click", () => resetTodayStatus(c.id));
 
       delBtn.addEventListener("click", () => {
-        const kid2 = activeKidState();
+        if(c.locked) return toast("Locked chore");
         if(c.statusToday === "claimed"){
-          addPoints(kid2, -state.pointsPerChore);
+          addPoints(app.state, -app.pointsPerChore);
         }
-        kid2.chores = kid2.chores.filter(x => x.id !== c.id);
-        saveState();
+        app.state.chores = app.state.chores.filter(x => x.id !== c.id);
+        saveApp();
         renderAll();
         toast("Deleted");
       });
@@ -1283,10 +1601,13 @@
   }
 
   function syncParentFields(){
-    pointsPerChore.value = state.pointsPerChore;
-    autoResetSelect.value = state.autoDailyReset;
-    dailyGoalStars.value = state.dailyGoalStars;
-    kidSelect.value = activeKidName();
+    pointsPerChore.value = app.pointsPerChore;
+    autoResetSelect.value = app.autoDailyReset;
+    dailyGoalStars.value = app.dailyGoalStars;
+    soundSelect.value = app.soundOn ? "on" : "off";
+
+    mysteryPromptInput.value = app.mysteryPrompt || "";
+    mysteryPromptStatus.textContent = app.mysteryPrompt ? `"${app.mysteryPrompt}"` : "None";
   }
 
   function renderDefaultChorePicker(){
@@ -1302,137 +1623,251 @@
     });
   }
 
-  // ---------------- Great Job animation ----------------
-  function showGreatJob(){
-    if(!greatJobMsg) return;
-    greatJobMsg.classList.remove("greatJobShow");
-    void greatJobMsg.offsetWidth;
-    greatJobMsg.classList.add("greatJobShow");
+  // ---------------- Fullscreen FX overlay ----------------
+  function showFx({emoji, title, sub, confetti, sound}){
+    fxEmoji.textContent = emoji || "⭐";
+    fxTitle.textContent = title || "Great Job!";
+    fxSub.textContent = sub || "";
 
-    if(greatJobTimer) clearTimeout(greatJobTimer);
-    greatJobTimer = setTimeout(() => {
-      greatJobMsg.classList.remove("greatJobShow");
-    }, 3000);
+    fxConfettiLayer.innerHTML = "";
+    if(confetti) fxConfettiBurst(36);
+
+    fxOverlay.style.display = "flex";
+
+    if(app.soundOn && sound) sfx(sound);
+
+    // auto-close after 2.2s (but user can click Continue)
+    setTimeout(() => {
+      if(fxOverlay.style.display === "flex") fxOverlay.style.display = "none";
+    }, 2200);
   }
 
-  // ---------------- Confetti burst ----------------
-  function confettiBurst(){
-    if(!confettiLayer) return;
-
+  function fxConfettiBurst(count){
     const colors = ["#dc2626","#7c3aed","#2563eb","#16a34a","#f59e0b","#db2777","#22d3ee","#a3e635","#ffffff"];
-    const count = 18;
-
     for(let i=0;i<count;i++){
       const c = document.createElement("div");
-      c.className = "confetti";
-      c.style.left = Math.floor(10 + Math.random()*80) + "%";
-      c.style.top = Math.floor(60 + Math.random()*20) + "%";
+      c.className = "fxConfetti";
+      c.style.left = Math.floor(6 + Math.random()*88) + "%";
+      c.style.top = Math.floor(62 + Math.random()*18) + "%";
       c.style.background = colors[Math.floor(Math.random()*colors.length)];
-      c.style.animationDuration = (700 + Math.random()*450) + "ms";
-      confettiLayer.appendChild(c);
-      setTimeout(() => c.remove(), 1100);
+      c.style.animationDuration = (800 + Math.random()*650) + "ms";
+      fxConfettiLayer.appendChild(c);
+      setTimeout(() => c.remove(), 1400);
     }
   }
 
-  // ---------------- FX ----------------
-  function balloonPopHuge(){
-    balloonFx.classList.remove("balloonBoom");
-    void balloonFx.offsetWidth;
-    balloonFx.classList.add("balloonBoom");
-  }
+  // ---------------- Perfect day celebration ----------------
+  function maybePerfectDayCelebrate(beforeStars, afterStars){
+    if(afterStars < MAX_STARS) return;
+    if(beforeStars >= MAX_STARS) return;
 
-  function megaStarCelebrate(){
-    starFx.classList.remove("starMegaPop");
-    void starFx.offsetWidth;
-    starFx.classList.add("starMegaPop");
-    burstAt(kidScoreCard);
-  }
+    const today = dateKey(new Date());
+    if(app.state.lastPerfectDayKey === today) return;
 
-  function burstAt(host){
-    if(!host) return;
-    const burst = document.createElement("div");
-    burst.className = "burst";
+    app.state.lastPerfectDayKey = today;
+    saveApp();
 
-    const vectors = [
-      {dx:-110, dy:-40}, {dx:-70, dy:-90}, {dx:0, dy:-115},
-      {dx:70, dy:-90}, {dx:110, dy:-40}, {dx:-95, dy:35},
-      {dx:95, dy:35}, {dx:0, dy:100}
-    ];
-    const colors = ["#dc2626","#7c3aed","#2563eb","#16a34a","#f59e0b","#db2777","#22d3ee","#a3e635"];
-
-    vectors.forEach(v => {
-      const s = document.createElement("div");
-      s.className = "spark";
-      s.style.setProperty("--dx", v.dx + "px");
-      s.style.setProperty("--dy", v.dy + "px");
-      s.style.background = colors[Math.floor(Math.random()*colors.length)];
-      burst.appendChild(s);
+    showFx({
+      emoji: "🏆",
+      title: "PERFECT DAY!",
+      sub: "10 stars unlocked. Incredible work.",
+      confetti: true,
+      sound: "perfect"
     });
+  }
 
-    host.appendChild(burst);
-    setTimeout(() => burst.remove(), 850);
+  // ---------------- Hold-to-claim ----------------
+  function attachHoldToClaim(buttonEl, onClaim){
+    let holdTimer = null;
+    let raf = null;
+    let start = 0;
+    const HOLD_MS = 3000;
+
+    const clear = () => {
+      if(holdTimer) clearTimeout(holdTimer);
+      holdTimer = null;
+      if(raf) cancelAnimationFrame(raf);
+      raf = null;
+      buttonEl.style.setProperty("--hold", 0);
+    };
+
+    const tick = () => {
+      const t = performance.now();
+      const p = clamp01((t - start) / HOLD_MS);
+      buttonEl.style.setProperty("--hold", p);
+      if(p < 1 && holdTimer) raf = requestAnimationFrame(tick);
+    };
+
+    const begin = (e) => {
+      if(buttonEl.disabled) return;
+      try{ buttonEl.setPointerCapture(e.pointerId); } catch(_){}
+      clear();
+      start = performance.now();
+      if(app.soundOn) sfx("arm");
+      holdTimer = setTimeout(() => { clear(); onClaim(); }, HOLD_MS);
+      raf = requestAnimationFrame(tick);
+    };
+
+    const end = () => clear();
+
+    buttonEl.addEventListener("pointerdown", begin);
+    buttonEl.addEventListener("pointerup", end);
+    buttonEl.addEventListener("pointercancel", end);
+    buttonEl.addEventListener("pointerleave", end);
+    buttonEl.addEventListener("contextmenu", (e) => e.preventDefault());
+  }
+
+  function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+
+  // ---------------- Sound effects (Web Audio) ----------------
+  function sfx(type){
+    if(!app.soundOn) return;
+
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if(!AudioCtx) return;
+
+    let ctx;
+    try{ ctx = new AudioCtx(); } catch(e){ return; }
+
+    const now = ctx.currentTime;
+
+    const beep = (freq, dur, gainVal, wave="sine") => {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = wave;
+      o.frequency.setValueAtTime(freq, now);
+      g.gain.setValueAtTime(gainVal, now);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(now); o.stop(now + dur);
+    };
+
+    const sweep = (f1, f2, dur, gainVal, wave="triangle") => {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = wave;
+      o.frequency.setValueAtTime(f1, now);
+      o.frequency.exponentialRampToValueAtTime(f2, now + dur);
+      g.gain.setValueAtTime(gainVal, now);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(now); o.stop(now + dur);
+    };
+
+    switch(type){
+      case "arm":     beep(520, 0.05, 0.045, "sine"); break;
+      case "claim":   sweep(420, 620, 0.09, 0.055, "triangle"); break;
+      case "star":    beep(880, 0.07, 0.06, "sine"); beep(1320, 0.06, 0.045, "sine"); break;
+      case "approve": sweep(520, 780, 0.10, 0.055, "triangle"); break;
+      case "decline": sweep(520, 260, 0.12, 0.05, "sawtooth"); break;
+      case "strike":  beep(220, 0.12, 0.05, "square"); break;
+      case "lose":    sweep(380, 190, 0.18, 0.055, "sawtooth"); break;
+      case "mystery": beep(660, 0.06, 0.05, "sine"); beep(990, 0.06, 0.045, "sine"); beep(1320, 0.06, 0.04, "sine"); break;
+      case "perfect":
+        beep(523.25, 0.08, 0.055, "triangle");
+        beep(659.25, 0.08, 0.05, "triangle");
+        beep(783.99, 0.10, 0.05, "triangle");
+        beep(1046.5, 0.14, 0.045, "triangle");
+        break;
+      case "error":   beep(180, 0.10, 0.05, "square"); break;
+      default:        beep(520, 0.06, 0.04, "sine");
+    }
+
+    setTimeout(() => { try{ ctx.close(); } catch(_){ } }, 250);
   }
 
   // ---------------- Storage ----------------
   function loadState(){
     try{
       const raw = localStorage.getItem(STORAGE_KEY);
-      if(!raw){
-        return deepCopy(defaults);
-      }
-      const parsed = JSON.parse(raw);
+      if(!raw) return deepCopy(defaults);
 
+      const parsed = JSON.parse(raw);
       const merged = deepCopy(defaults);
       Object.assign(merged, parsed);
 
-      merged.activeKid = (merged.activeKid === "Nico") ? "Nico" : "Myles";
+      // Fixed passcode always
+      merged.parentPasscode = "123";
+
       merged.pointsPerChore = clampInt(merged.pointsPerChore ?? 10, 1, 100);
       merged.dailyGoalStars = clampInt(merged.dailyGoalStars ?? 8, 1, MAX_STARS);
       merged.autoDailyReset = merged.autoDailyReset === "off" ? "off" : "on";
+      merged.soundOn = !!merged.soundOn;
+      merged.mysteryPrompt = (merged.mysteryPrompt || "").toString();
 
-      // Force passcode back to fixed value
-      merged.parentPasscode = "123";
+      if(!merged.state || typeof merged.state !== "object") merged.state = defaultState();
+      if(!Array.isArray(merged.state.chores)) merged.state.chores = [];
 
-      if(!merged.kids || typeof merged.kids !== "object") merged.kids = { Myles: defaultKid(), Nico: defaultKid() };
-      if(!merged.kids.Myles) merged.kids.Myles = defaultKid();
-      if(!merged.kids.Nico) merged.kids.Nico = defaultKid();
+      merged.state.chores = merged.state.chores.map(c => ({
+        id: c.id || rid(),
+        name: (c.name || "Chore").toString(),
+        statusToday: normalizeStatus(c.statusToday),
+        approvedAllTime: clampInt(c.approvedAllTime ?? 0, 0, 999999),
+        createdAt: Number(c.createdAt) || Date.now(),
+        locked: !!c.locked,
+        lockKey: (c.lockKey || "").toString()
+      }));
 
-      ["Myles","Nico"].forEach(name => {
-        const k = merged.kids[name];
-        if(!Array.isArray(k.chores)) k.chores = [];
-        k.chores = k.chores.map(c => ({
-          id: c.id || rid(),
-          name: (c.name || "Chore").toString(),
-          statusToday: normalizeStatus(c.statusToday),
-          approvedAllTime: clampInt(c.approvedAllTime ?? 0, 0, 999999),
-          createdAt: Number(c.createdAt) || Date.now()
-        }));
-        const maxPoints = MAX_STARS * clampInt(merged.pointsPerChore ?? 10, 1, 100);
-        k.points = clampInt(k.points ?? 0, 0, maxPoints);
-        k.strikes = clampInt(k.strikes ?? 0, 0, STRIKES_MAX);
-        k.lastDateKey = (k.lastDateKey || dateKey(new Date())).toString();
-      });
+      const maxPoints = MAX_STARS * clampInt(merged.pointsPerChore, 1, 100);
+      merged.state.points = clampInt(merged.state.points ?? 0, 0, maxPoints);
+      merged.state.strikes = clampInt(merged.state.strikes ?? 0, 0, STRIKES_MAX);
+      merged.state.lastDateKey = (merged.state.lastDateKey || dateKey(new Date())).toString();
+      merged.state.lastPerfectDayKey = (merged.state.lastPerfectDayKey || "").toString();
+      merged.state.mysteryUsedKey = (merged.state.mysteryUsedKey || "").toString();
 
       return merged;
-    } catch (e){
+    } catch(e){
       return deepCopy(defaults);
     }
   }
 
-  function saveState(){
-    try{
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    } catch(e){
-      // ignore
-    }
+  function saveApp(){
+    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(app)); } catch(e){}
   }
 
-  function deepCopy(obj){
-    return JSON.parse(JSON.stringify(obj));
-  }
+  function deepCopy(obj){ return JSON.parse(JSON.stringify(obj)); }
 
   function normalizeStatus(s){
     return (s === "claimed" || s === "approved" || s === "pending") ? s : "pending";
+  }
+
+  function hardenApp(){
+    // Force passcode fixed always
+    app.parentPasscode = "123";
+
+    // normalize app.state
+    if(!app.state || typeof app.state !== "object") app.state = defaultState();
+    if(!Array.isArray(app.state.chores)) app.state.chores = [];
+
+    // normalize chores
+    app.state.chores = app.state.chores.map(c => ({
+      id: c.id || rid(),
+      name: (c.name || "Chore").toString(),
+      statusToday: normalizeStatus(c.statusToday),
+      approvedAllTime: clampInt(c.approvedAllTime ?? 0, 0, 999999),
+      createdAt: Number(c.createdAt) || Date.now(),
+      locked: !!c.locked,
+      lockKey: (c.lockKey || "").toString()
+    }));
+
+    // ensure locked top exists + pinned
+    ensureLockedTopExists();
+
+    // clamp points/strikes
+    app.pointsPerChore = clampInt(app.pointsPerChore ?? 10, 1, 100);
+    app.dailyGoalStars = clampInt(app.dailyGoalStars ?? 8, 1, MAX_STARS);
+    app.autoDailyReset = app.autoDailyReset === "off" ? "off" : "on";
+    app.soundOn = !!app.soundOn;
+    app.mysteryPrompt = (app.mysteryPrompt || "").toString();
+
+    const maxPoints = MAX_STARS * clampInt(app.pointsPerChore, 1, 100);
+    app.state.points = clampInt(app.state.points ?? 0, 0, maxPoints);
+    app.state.strikes = clampInt(app.state.strikes ?? 0, 0, STRIKES_MAX);
+    app.state.lastDateKey = (app.state.lastDateKey || dateKey(new Date())).toString();
+    app.state.lastPerfectDayKey = (app.state.lastPerfectDayKey || "").toString();
+    app.state.mysteryUsedKey = (app.state.mysteryUsedKey || "").toString();
+
+    saveApp();
   }
 
   // ---------------- Helpers ----------------
@@ -1475,6 +1910,10 @@
     t.textContent = msg;
     document.body.appendChild(t);
     setTimeout(() => t.remove(), 1200);
+  }
+
+  function norm(s){
+    return String(s||"").trim().toLowerCase();
   }
 
 })();
