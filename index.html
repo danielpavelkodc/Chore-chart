@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="apple-mobile-web-app-title" content="Chore Chart">
-<meta name="apple-mobile-web-app-capable" content="yes">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Chore Chart</title>
@@ -15,7 +12,6 @@
 
       /* Roblox-ish: neon + blocky */
       --card: rgba(255,255,255,.92);
-      --glassBorder: rgba(255,255,255,.65);
 
       --blue:#2563eb;
       --purple:#7c3aed;
@@ -23,10 +19,6 @@
       --red:#dc2626;
       --yellow:#f59e0b;
       --pink:#db2777;
-
-      --neonCyan:#22d3ee;
-      --neonLime:#a3e635;
-      --neonViolet:#a78bfa;
 
       --shadow: 0 18px 44px rgba(0,0,0,.22);
       --shadow2: 0 12px 26px rgba(0,0,0,.16);
@@ -48,6 +40,7 @@
         radial-gradient(900px 520px at 50% 88%, rgba(163,230,53,.18), transparent 62%),
         linear-gradient(135deg, #0b1020, #1a1030 45%, #061a2b);
       overflow-x:hidden;
+      -webkit-text-size-adjust: 100%;
     }
 
     .wrap{max-width:1100px; margin:0 auto; padding:18px 14px 44px;}
@@ -56,7 +49,6 @@
       display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:12px;
       margin: 8px 0 12px;
     }
-
     .titleWrap{display:flex; align-items:center; gap:12px;}
 
     .robloxBadge{
@@ -116,6 +108,8 @@
       transition: transform .08s ease, filter .12s ease;
       user-select:none;
       border: var(--stroke) solid rgba(255,255,255,.40);
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
     .tabBtn:active{transform: scale(.97)}
     .kidTab{background: linear-gradient(135deg, rgba(34,211,238,.95), rgba(37,99,235,.95)); color:#08101f;}
@@ -263,6 +257,8 @@
       transition: transform .08s ease, filter .12s ease, opacity .12s ease;
       user-select:none;
       border: var(--stroke) solid rgba(255,255,255,.52);
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
     .btn:active{transform: scale(.97)}
     .btn:disabled{cursor:not-allowed; opacity:.90; filter:saturate(.85);}
@@ -331,7 +327,7 @@
       100%{transform: translate(var(--dx), var(--dy)) scale(0); opacity:0;}
     }
 
-    /* NEW: Confetti layer */
+    /* Confetti layer */
     .confettiLayer{
       position:absolute;
       inset:0;
@@ -368,28 +364,6 @@
     .inputWide{min-width: 260px; flex:1}
     .inputSmall{width: 160px}
     .divider{height:2px; background:rgba(0,0,0,.08); margin:14px 0}
-    .warnPill{
-      display:inline-block;
-      font-weight:1000;
-      padding:6px 10px;
-      border-radius:999px;
-      background: rgba(220,38,38,.10);
-      border: var(--stroke) solid rgba(220,38,38,.18);
-      color:#b91c1c;
-    }
-    .chip{
-      display:inline-block;
-      padding:7px 10px;
-      border-radius:999px;
-      font-weight:1000;
-      border: var(--stroke) solid rgba(0,0,0,.06);
-      box-shadow: var(--shadow2);
-      background: rgba(255,255,255,.90);
-      margin: 0 6px 6px 0;
-    }
-    .chipRed{background: rgba(220,38,38,.10); border-color: rgba(220,38,38,.18);}
-    .chipYellow{background: rgba(245,158,11,.14); border-color: rgba(245,158,11,.22);}
-    .chipGreen{background: rgba(22,163,74,.12); border-color: rgba(22,163,74,.18);}
 
     /* Default chores picker */
     .defaultPickWrap{display:flex; flex-direction:column; gap:10px; margin-top:8px;}
@@ -407,22 +381,6 @@
     }
     .defaultItem input{margin-top: 3px; width:22px; height:22px;}
     .defaultText{font-weight:950; color:#08101f; line-height:1.25;}
-
-    /* Rewards */
-    .rewardList{display:grid; gap:8px; margin-top:8px;}
-    .rewardItem{
-      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
-      padding:10px 12px;
-      border-radius: var(--radius2);
-      border: var(--stroke) solid rgba(0,0,0,.06);
-      background: rgba(255,255,255,.90);
-      box-shadow: var(--shadow2);
-    }
-    .rewardLeft{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
-    .rewardStar{font-weight:1000; padding:6px 10px; border-radius:999px; background: rgba(34,211,238,.12); border: var(--stroke) solid rgba(34,211,238,.18);}
-    .rewardText{font-weight:950;}
-    .rewardDone{opacity:.65; filter:saturate(.75);}
-    .rewardHint{color:var(--muted); font-weight:850; font-size:.98rem;}
 
     /* Toast */
     .toast{
@@ -451,7 +409,7 @@
           <div class="robloxBadge" aria-hidden="true"></div>
           <div>
             <h1><span id="kidNameTitle">Myles</span> Chore Chart</h1>
-            <p class="subtitle">Tap a chore to claim it (⭐ earned). Parent approves or declines.</p>
+            <p class="subtitle">Tap a chore to claim it. Parent approves or declines.</p>
           </div>
         </div>
       </div>
@@ -459,7 +417,7 @@
 
     <div class="tabs">
       <button class="tabBtn kidTab tabActive" id="kidTabBtn" type="button">Kid Page</button>
-      <button class="tabBtn parentTab" id="parentTabBtn" type="button">Parent Page (Locked)</button>
+      <button class="tabBtn parentTab" id="parentTabBtn" type="button">Parent Page</button>
     </div>
 
     <!-- KID PAGE -->
@@ -501,12 +459,6 @@
         </div>
 
         <div class="statusLine" id="goalStatusKid"></div>
-
-        <div class="divider"></div>
-
-        <div class="sectionTitle" style="margin-bottom:6px;">Unlockables</div>
-        <div class="smallNote" id="unlockNote">Unlock rewards as you earn ⭐. Parent decides the reward each day.</div>
-        <div class="rewardList" id="kidRewardsList"></div>
       </div>
 
       <div class="card">
@@ -522,10 +474,11 @@
     <div id="parentPage" class="hidden">
       <div class="card">
         <div class="sectionTitle">🔒 Parent Page</div>
-        <div class="smallNote">Unlock required. Default passcode: <span class="warnPill">bpasscode</span></div>
+        <div class="smallNote">Enter passcode to unlock.</div>
 
         <div class="formRow">
-          <input id="parentPassInput" class="inputWide" type="password" placeholder="Enter parent passcode" />
+          <input id="parentPassInput" class="inputWide" type="password" placeholder="Enter passcode"
+                 autocomplete="off" autocapitalize="none" />
           <button class="btn btnYellow" id="unlockBtn" type="button">Unlock</button>
           <button class="btn btnGray" id="lockBtn" type="button">Lock</button>
         </div>
@@ -557,19 +510,24 @@
             </div>
 
             <div style="margin-top:8px;">
-              <span class="chip chipRed">Red: <span id="countPending">0</span></span>
-              <span class="chip chipYellow">Yellow: <span id="countClaimed">0</span></span>
-              <span class="chip chipGreen">Green: <span id="countApproved">0</span></span>
+              <span style="display:inline-block; padding:7px 10px; border-radius:999px; font-weight:1000; box-shadow: var(--shadow2); background: rgba(255,255,255,.90); margin: 0 6px 6px 0;">
+                Red: <span id="countPending">0</span>
+              </span>
+              <span style="display:inline-block; padding:7px 10px; border-radius:999px; font-weight:1000; box-shadow: var(--shadow2); background: rgba(245,158,11,.14); margin: 0 6px 6px 0; border: var(--stroke) solid rgba(245,158,11,.22);">
+                Yellow: <span id="countClaimed">0</span>
+              </span>
+              <span style="display:inline-block; padding:7px 10px; border-radius:999px; font-weight:1000; box-shadow: var(--shadow2); background: rgba(22,163,74,.12); margin: 0 6px 6px 0; border: var(--stroke) solid rgba(22,163,74,.18);">
+                Green: <span id="countApproved">0</span>
+              </span>
             </div>
 
             <div class="divider"></div>
 
             <div class="sectionTitle">Review Claimed Chores</div>
-            <div class="smallNote">Approve turns green. Decline resets to red and removes the earned points/star.</div>
+            <div class="smallNote">Approve turns green. Decline resets to red and removes the earned star.</div>
 
             <div class="btnRow" style="margin-bottom:10px;">
               <button class="btn btnGreen" id="approveAllBtn" type="button">✅ Approve All</button>
-              <button class="btn btnGreen" id="approveAllClearStrikesBtn" type="button">✅ Approve All + Clear Strikes</button>
               <button class="btn btnGray" id="declineSelectedBtn" type="button">❌ Decline Selected</button>
               <button class="btn btnBlue" id="approveSelectedBtn" type="button">✅ Approve Selected</button>
             </div>
@@ -589,9 +547,8 @@
           <div class="card">
             <div class="sectionTitle">Chores & Settings</div>
 
-            <div class="sectionTitle" style="font-size:1.18rem; margin-top:2px;">Kid Name (shown on Kid Page)</div>
+            <div class="sectionTitle" style="font-size:1.18rem; margin-top:2px;">Active Kid</div>
             <div class="formRow" style="justify-content:flex-start">
-              <label style="font-weight:1000; color:var(--muted); align-self:center;">Active kid</label>
               <select id="kidSelect">
                 <option value="Myles">Myles</option>
                 <option value="Nico">Nico</option>
@@ -627,12 +584,6 @@
 
             <div class="divider"></div>
 
-            <div class="sectionTitle">Rewards (default unlockables)</div>
-            <div class="smallNote">Defaults are shown to the kid. Parent decides the reward each day (no need to edit here).</div>
-            <div class="rewardList" id="parentRewardsList"></div>
-
-            <div class="divider"></div>
-
             <div class="sectionTitle">Chart Settings (shared)</div>
             <div class="formRow" style="justify-content:flex-start">
               <label style="font-weight:1000; color:var(--muted); align-self:center;">Points per chore</label>
@@ -652,23 +603,6 @@
 
             <div class="divider"></div>
 
-            <div class="sectionTitle">Change Parent Passcode</div>
-            <div class="formRow" style="justify-content:flex-start">
-              <input id="newParentPass" class="inputWide" type="password" placeholder="New parent passcode" />
-              <button class="btn btnYellow" id="changePassBtn" type="button">Update</button>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="sectionTitle">Reset Everything</div>
-            <div class="smallNote">Reset requires code <span class="warnPill">123</span>.</div>
-            <div class="formRow" style="justify-content:flex-start">
-              <input id="resetCodeInput" class="inputWide" type="password" placeholder="Enter reset code (123)" />
-              <button class="btn btnStrike" id="resetBtn" type="button">🔄 Reset</button>
-            </div>
-
-            <div class="divider"></div>
-
             <div class="sectionTitle">Save</div>
             <button class="btn btnBlue" id="manualSaveBtn" type="button">💾 Save Now</button>
           </div>
@@ -680,9 +614,12 @@
 
 <script>
 (() => {
-  const STORAGE_KEY = "kids_chore_chart_roblox_theme_v4_no_xp";
+  const STORAGE_KEY = "kids_chore_chart_roblox_theme_v6_10stars_no_unlockables_fixedpass";
 
-  // Default chores (>=7, includes your first two)
+  const MAX_STARS = 10;
+  const STRIKES_MAX = 3;
+
+  // Default chores
   const DEFAULT_CHORE_TEMPLATES = [
     "Make bed, get dressed, and eat breakfast",
     "Brush teeth in the morning",
@@ -692,18 +629,12 @@
     "Read a book for 10 minutes",
     "Feed the pet (if you have one)",
     "Brush teeth at night",
-    "Put dirty clothes in the hamper"
+    "Put dirty clothes in the hamper",
+    "Complete homework",
+    "Ask mom/dad for a chore",
+    "Make a craft"
   ];
 
-  // Default unlockables (parent decides daily; these are just prompts)
-  const DEFAULT_REWARDS = [
-    { stars: 5,  label: "Unlock a new badge 🏅 (parent picks)" },
-    { stars: 10, label: "Surprise sticker ⭐ (parent picks)" },
-    { stars: 15, label: "Bonus reward 🎁 (parent picks)" },
-    { stars: 20, label: "Big reward 🏆 (parent picks)" }
-  ];
-
-  // Per-kid model (Myles / Nico)
   const defaultKid = () => ({
     chores: [],
     points: 0,
@@ -717,10 +648,12 @@
       Myles: defaultKid(),
       Nico: defaultKid()
     },
+    // Stars are derived from points using pointsPerChore:
+    // 1 chore = +pointsPerChore points AND 1 star = pointsPerChore points
     pointsPerChore: 10,
     dailyGoalStars: 8,
     autoDailyReset: "on",
-    parentPasscode: "bpasscode"
+    parentPasscode: "123" // fixed, not displayed, not changeable
   };
 
   let state = loadState();
@@ -748,8 +681,6 @@
   const greatJobMsg = document.getElementById("greatJobMsg");
   let greatJobTimer = null;
 
-  const kidRewardsList = document.getElementById("kidRewardsList");
-
   // --- Elements (parent)
   const parentPassInput = document.getElementById("parentPassInput");
   const unlockBtn = document.getElementById("unlockBtn");
@@ -765,7 +696,6 @@
 
   const parentReviewList = document.getElementById("parentReviewList");
   const approveAllBtn = document.getElementById("approveAllBtn");
-  const approveAllClearStrikesBtn = document.getElementById("approveAllClearStrikesBtn");
   const approveSelectedBtn = document.getElementById("approveSelectedBtn");
   const declineSelectedBtn = document.getElementById("declineSelectedBtn");
 
@@ -789,26 +719,24 @@
   const addSelectedDefaultsBtn = document.getElementById("addSelectedDefaultsBtn");
   const clearDefaultChecksBtn = document.getElementById("clearDefaultChecksBtn");
 
-  const parentRewardsList = document.getElementById("parentRewardsList");
-
-  const newParentPass = document.getElementById("newParentPass");
-  const changePassBtn = document.getElementById("changePassBtn");
-
-  const resetCodeInput = document.getElementById("resetCodeInput");
-  const resetBtn = document.getElementById("resetBtn");
-
   const manualSaveBtn = document.getElementById("manualSaveBtn");
 
   // Daily reset check (per kid)
   maybeDailyReset();
 
-  // Render static pickers
+  // Render static picker
   renderDefaultChorePicker();
-  renderRewardsLists(); // same defaults shown on kid + parent
 
-  // --- Tabs
+  // --- Tabs (kid-proof parent tab)
   kidTabBtn.addEventListener("click", () => showTab("kid"));
-  parentTabBtn.addEventListener("click", () => showTab("parent"));
+  parentTabBtn.addEventListener("click", () => {
+    // If not unlocked, do not allow staying on parent page
+    showTab("parent");
+    if(!unlocked){
+      toast("Ask a parent");
+    }
+  });
+
   function showTab(which){
     if(which === "kid"){
       kidPage.classList.remove("hidden");
@@ -875,7 +803,13 @@
       const exists = kid.chores.some(c => (c.name || "").trim().toLowerCase() === name.trim().toLowerCase());
       if(exists) return;
 
-      kid.chores.push({ id: rid(), name, statusToday: "pending", approvedAllTime: 0 });
+      kid.chores.push({
+        id: rid(),
+        name,
+        statusToday: "pending",
+        approvedAllTime: 0,
+        createdAt: Date.now()
+      });
       added += 1;
     });
 
@@ -890,14 +824,24 @@
     toast("Cleared");
   });
 
-  // --- Parent: manage chores (for active kid)
+  // --- Parent: add chore (duplicate prevention)
   addChoreBtn.addEventListener("click", () => {
     if(!unlocked) return;
     const name = (newChoreName.value || "").trim();
     if(!name) return;
 
     const kid = activeKidState();
-    kid.chores.push({ id: rid(), name, statusToday: "pending", approvedAllTime: 0 });
+    const exists = kid.chores.some(c => (c.name || "").trim().toLowerCase() === name.trim().toLowerCase());
+    if(exists) return toast("Already added");
+
+    kid.chores.push({
+      id: rid(),
+      name,
+      statusToday: "pending",
+      approvedAllTime: 0,
+      createdAt: Date.now()
+    });
+
     newChoreName.value = "";
     saveState();
     renderAll();
@@ -909,7 +853,7 @@
   undoStrikeBtn.addEventListener("click", () => {
     if(!unlocked) return;
     const kid = activeKidState();
-    kid.strikes = clampInt(kid.strikes - 1, 0, 2);
+    kid.strikes = clampInt(kid.strikes - 1, 0, STRIKES_MAX);
     saveState();
     renderAll();
     toast("Strike undone");
@@ -938,21 +882,6 @@
     toast("Approved all ✅");
   });
 
-  approveAllClearStrikesBtn.addEventListener("click", () => {
-    if(!unlocked) return;
-    const kid = activeKidState();
-    const claimed = kid.chores.filter(c => c.statusToday === "claimed");
-    if(claimed.length === 0) return toast("No claimed chores");
-    claimed.forEach(c => {
-      c.statusToday = "approved";
-      c.approvedAllTime += 1;
-    });
-    kid.strikes = 0;
-    saveState();
-    renderAll();
-    toast("Approved all + cleared strikes ✅");
-  });
-
   approveSelectedBtn.addEventListener("click", () => {
     if(!unlocked) return;
     const ids = getSelectedReviewIds();
@@ -977,45 +906,14 @@
   // --- Parent: settings (shared)
   saveSettingsBtn.addEventListener("click", () => {
     if(!unlocked) return;
+
     state.pointsPerChore = clampInt(pointsPerChore.value, 1, 100);
     state.autoDailyReset = autoResetSelect.value === "off" ? "off" : "on";
-    state.dailyGoalStars = clampInt(dailyGoalStars.value, 1, 10);
+    state.dailyGoalStars = clampInt(dailyGoalStars.value, 1, MAX_STARS);
+
     saveState();
     renderAll();
     toast("Saved settings");
-  });
-
-  // --- Parent: passcode
-  changePassBtn.addEventListener("click", () => {
-    if(!unlocked) return;
-    const np = (newParentPass.value || "").trim();
-    if(!np) return toast("Enter a passcode");
-    state.parentPasscode = np;
-    newParentPass.value = "";
-    saveState();
-    toast("Passcode updated");
-  });
-
-  // --- Parent: reset
-  resetBtn.addEventListener("click", () => {
-    if(!unlocked) return;
-    const code = resetCodeInput.value;
-    if(code !== "123"){
-      toast("Wrong reset code");
-      return;
-    }
-    state = deepCopy(defaults);
-    state.kids.Myles.chores = [];
-    state.kids.Nico.chores = [];
-    state.kids.Myles.lastDateKey = dateKey(new Date());
-    state.kids.Nico.lastDateKey = dateKey(new Date());
-    unlocked = false;
-    parentControls.classList.add("hidden");
-    parentLockedNote.textContent = "Locked.";
-    resetCodeInput.value = "";
-    saveState();
-    renderAll();
-    toast("Reset complete");
   });
 
   manualSaveBtn.addEventListener("click", () => {
@@ -1028,8 +926,12 @@
   renderAll();
 
   // ---------------- Core logic ----------------
+  function activeKidName(){
+    return (state.activeKid === "Nico") ? "Nico" : "Myles";
+  }
+
   function activeKidState(){
-    const k = (state.activeKid === "Nico") ? "Nico" : "Myles";
+    const k = activeKidName();
     if(!state.kids) state.kids = {};
     if(!state.kids.Myles) state.kids.Myles = defaultKid();
     if(!state.kids.Nico) state.kids.Nico = defaultKid();
@@ -1050,7 +952,6 @@
     addPoints(kid, state.pointsPerChore);
     const afterStars = starsFromPoints(kid.points);
 
-    // move claimed/approved toward bottom by re-sorting on render
     saveState();
     renderAll();
 
@@ -1118,11 +1019,13 @@
   }
 
   function addPoints(kid, delta){
-    kid.points = clampInt(kid.points + delta, 0, 100);
+    const maxPoints = MAX_STARS * clampInt(state.pointsPerChore, 1, 100);
+    kid.points = clampInt(kid.points + delta, 0, maxPoints);
   }
 
   function starsFromPoints(points){
-    return clampInt(Math.floor(points / 10), 0, 10);
+    const pps = clampInt(state.pointsPerChore, 1, 100);
+    return clampInt(Math.floor(points / pps), 0, MAX_STARS);
   }
 
   function addStrike(){
@@ -1131,13 +1034,13 @@
 
     balloonPopHuge();
 
-    kid.strikes = clampInt(kid.strikes + 1, 0, 3);
+    kid.strikes = clampInt(kid.strikes + 1, 0, STRIKES_MAX);
 
-    if(kid.strikes >= 3){
+    if(kid.strikes >= STRIKES_MAX){
       kid.strikes = 0;
       const beforeStars = starsFromPoints(kid.points);
       if(beforeStars > 0){
-        addPoints(kid, -10);
+        addPoints(kid, -state.pointsPerChore);
         burstAt(kidScoreCard);
         toast("3 strikes! 1 star lost.");
       } else {
@@ -1171,7 +1074,7 @@
 
   // ---------------- UI rendering ----------------
   function renderAll(){
-    const kidName = (state.activeKid === "Nico") ? "Nico" : "Myles";
+    const kidName = activeKidName();
     const kid = activeKidState();
     const stars = starsFromPoints(kid.points);
 
@@ -1183,7 +1086,7 @@
 
     // stars row
     starsRowKid.innerHTML = "";
-    for(let i=1;i<=10;i++){
+    for(let i=1;i<=MAX_STARS;i++){
       const s = document.createElement("span");
       s.textContent = "⭐";
       if(i > stars) s.classList.add("starDim");
@@ -1191,24 +1094,22 @@
     }
 
     // goal line
-    const goal = clampInt(state.dailyGoalStars, 1, 10);
+    const goal = clampInt(state.dailyGoalStars, 1, MAX_STARS);
     goalStatusKid.textContent =
-      (stars >= 10) ? "Perfect day: 10 stars!"
+      (stars >= MAX_STARS) ? "Perfect day: 10 stars!"
       : (stars >= goal) ? `Goal reached: ${stars} stars (goal is ${goal}).`
       : `You have ${stars} stars. Goal is ${goal}.`;
 
-    // rewards (kid view)
-    renderRewardsProgress(kidRewardsList, stars);
-
-    // chores list: IMPORTANT — move completed/claimed to bottom
+    // chores list: pending first, then claimed, then approved (stable by createdAt)
     kidChoreList.innerHTML = "";
 
     const sorted = [...kid.chores].sort((a,b) => {
-      // pending first, then claimed, then approved
       const w = s => (s === "pending" ? 0 : (s === "claimed" ? 1 : 2));
       const d = w(a.statusToday) - w(b.statusToday);
       if(d !== 0) return d;
-      // stable-ish: fallback by name
+      const ca = Number(a.createdAt) || 0;
+      const cb = Number(b.createdAt) || 0;
+      if(ca !== cb) return ca - cb;
       return String(a.name||"").localeCompare(String(b.name||""));
     });
 
@@ -1233,9 +1134,14 @@
 
       const disabled = (c.statusToday !== "pending") ? "disabled" : "";
 
+      const statusIcon =
+        c.statusToday === "pending" ? "🔴"
+        : c.statusToday === "claimed" ? "🟡"
+        : "🟢";
+
       li.innerHTML = `
         <div class="choreTop">
-          <div class="choreName">${escapeHtml(c.name)}</div>
+          <div class="choreName">${statusIcon} ${escapeHtml(c.name)}</div>
           <div class="choreMeta">${meta}</div>
         </div>
         <div class="btnRow">
@@ -1249,12 +1155,12 @@
       kidChoreList.appendChild(li);
     });
 
+    // Parent renders only when unlocked (but parent page can still show login card)
     if(unlocked){
       renderParentSummary();
       renderParentReview();
       renderParentChores();
       syncParentFields();
-      renderRewardsProgress(parentRewardsList, stars);
     }
   }
 
@@ -1296,7 +1202,7 @@
         <div class="choreTop">
           <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
             <input type="checkbox" data-id="${escapeAttr(c.id)}" style="width:22px; height:22px;" />
-            <div class="choreName">${escapeHtml(c.name)}</div>
+            <div class="choreName">🟡 ${escapeHtml(c.name)}</div>
           </div>
           <div class="choreMeta">Claimed: waiting for review</div>
         </div>
@@ -1321,16 +1227,16 @@
       li.className = "choreItem";
 
       const statusChip =
-        c.statusToday === "pending" ? `<span class="chip chipRed">Red</span>`
-        : c.statusToday === "claimed" ? `<span class="chip chipYellow">Yellow</span>`
-        : `<span class="chip chipGreen">Green</span>`;
+        c.statusToday === "pending" ? `🔴 Red`
+        : c.statusToday === "claimed" ? `🟡 Yellow`
+        : `🟢 Green`;
 
       li.innerHTML = `
         <div class="choreTop">
           <div style="flex:1; min-width:240px;">
             <div class="smallNote" style="margin:0 0 6px;">Name</div>
             <input class="inputWide" data-id="${escapeAttr(c.id)}" type="text" value="${escapeAttr(c.name)}" />
-            <div style="margin-top:8px;">${statusChip}</div>
+            <div style="margin-top:8px; font-weight:950; color: var(--muted);">${statusChip}</div>
           </div>
           <div class="choreMeta">Approved all-time: ${c.approvedAllTime}</div>
         </div>
@@ -1348,6 +1254,11 @@
       saveBtn.addEventListener("click", () => {
         const newName = (input.value || "").trim();
         if(!newName) return toast("Enter a name");
+
+        const kid2 = activeKidState();
+        const exists = kid2.chores.some(x => x.id !== c.id && (x.name||"").trim().toLowerCase() === newName.toLowerCase());
+        if(exists) return toast("Duplicate name");
+
         c.name = newName;
         saveState();
         renderAll();
@@ -1375,7 +1286,7 @@
     pointsPerChore.value = state.pointsPerChore;
     autoResetSelect.value = state.autoDailyReset;
     dailyGoalStars.value = state.dailyGoalStars;
-    kidSelect.value = (state.activeKid === "Nico") ? "Nico" : "Myles";
+    kidSelect.value = activeKidName();
   }
 
   function renderDefaultChorePicker(){
@@ -1388,32 +1299,6 @@
         <div class="defaultText">${escapeHtml(name)}</div>
       `;
       defaultChoreList.appendChild(row);
-    });
-  }
-
-  function renderRewardsLists(){
-    // Parent + kid show the same default rewards (parent decides daily)
-    renderRewardsProgress(kidRewardsList, 0);
-    renderRewardsProgress(parentRewardsList, 0);
-  }
-
-  function renderRewardsProgress(host, stars){
-    if(!host) return;
-    host.innerHTML = "";
-    DEFAULT_REWARDS.forEach(r => {
-      const done = stars >= r.stars;
-      const row = document.createElement("div");
-      row.className = "rewardItem" + (done ? " rewardDone" : "");
-      row.innerHTML = `
-        <div class="rewardLeft">
-          <div class="rewardStar">${r.stars} ⭐</div>
-          <div>
-            <div class="rewardText">${escapeHtml(r.label)}</div>
-            <div class="rewardHint">${done ? "Unlocked ✅" : "Locked 🔒"}</div>
-          </div>
-        </div>
-      `;
-      host.appendChild(row);
     });
   }
 
@@ -1430,7 +1315,7 @@
     }, 3000);
   }
 
-  // ---------------- Extra fun: confetti burst ----------------
+  // ---------------- Confetti burst ----------------
   function confettiBurst(){
     if(!confettiLayer) return;
 
@@ -1502,9 +1387,11 @@
 
       merged.activeKid = (merged.activeKid === "Nico") ? "Nico" : "Myles";
       merged.pointsPerChore = clampInt(merged.pointsPerChore ?? 10, 1, 100);
-      merged.dailyGoalStars = clampInt(merged.dailyGoalStars ?? 8, 1, 10);
+      merged.dailyGoalStars = clampInt(merged.dailyGoalStars ?? 8, 1, MAX_STARS);
       merged.autoDailyReset = merged.autoDailyReset === "off" ? "off" : "on";
-      merged.parentPasscode = (merged.parentPasscode || "bpasscode").toString();
+
+      // Force passcode back to fixed value
+      merged.parentPasscode = "123";
 
       if(!merged.kids || typeof merged.kids !== "object") merged.kids = { Myles: defaultKid(), Nico: defaultKid() };
       if(!merged.kids.Myles) merged.kids.Myles = defaultKid();
@@ -1517,10 +1404,12 @@
           id: c.id || rid(),
           name: (c.name || "Chore").toString(),
           statusToday: normalizeStatus(c.statusToday),
-          approvedAllTime: clampInt(c.approvedAllTime ?? 0, 0, 999999)
+          approvedAllTime: clampInt(c.approvedAllTime ?? 0, 0, 999999),
+          createdAt: Number(c.createdAt) || Date.now()
         }));
-        k.points = clampInt(k.points ?? 0, 0, 100);
-        k.strikes = clampInt(k.strikes ?? 0, 0, 2);
+        const maxPoints = MAX_STARS * clampInt(merged.pointsPerChore ?? 10, 1, 100);
+        k.points = clampInt(k.points ?? 0, 0, maxPoints);
+        k.strikes = clampInt(k.strikes ?? 0, 0, STRIKES_MAX);
         k.lastDateKey = (k.lastDateKey || dateKey(new Date())).toString();
       });
 
