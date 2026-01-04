@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="apple-touch-icon" href="/Chore-chart/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="/Chore-chart/favicon-32x32.png">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Chore Chart</title>
@@ -128,6 +128,13 @@
     }
     .card > *{position:relative; z-index:1;}
 
+    /* Sticky kid header card */
+    .stickyKidHeader{
+      position: sticky;
+      top: 10px;
+      z-index: 50;
+    }
+
     /* BIG STAR COUNT */
     .starHero{display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-bottom: 8px;}
     .starCountBig{display:flex; align-items:flex-end; gap:12px;}
@@ -151,6 +158,11 @@
     .badgeStrike{
       background: linear-gradient(135deg, rgba(220,38,38,.12), rgba(255,255,255,.92));
       border-color: rgba(220,38,38,.18);
+    }
+
+    .badgeQueue{
+      background: linear-gradient(135deg, rgba(245,158,11,.16), rgba(255,255,255,.92));
+      border-color: rgba(245,158,11,.22);
     }
 
     /* Progress bar */
@@ -243,7 +255,7 @@
       min-width: 220px;
     }
     .btn:active{transform: scale(.97)}
-    .btn:disabled{cursor:not-allowed; opacity:.90; filter:saturate(.85);}
+    .btn:disabled{cursor:not-allowed; opacity:.70; filter:saturate(.75);}
 
     .btnRed{background: linear-gradient(135deg, #fb7185, #dc2626); color:#fff;}
     .btnYellow{background: linear-gradient(135deg, #fde68a, #f59e0b); color:#1c243a;}
@@ -253,13 +265,7 @@
     .btnPurple{background: linear-gradient(135deg, #c4b5fd, #7c3aed); color:#08101f;}
     .btnGray{background:#eef2f7; color:#1c243a; border-color: rgba(0,0,0,.06);}
 
-    /* Hold-to-claim progress */
-    .holdHint{
-      text-align:center;
-      font-weight:950;
-      color: var(--muted);
-      margin: 6px 0 0;
-    }
+    /* Hold-to-claim progress (no text labels) */
     .holdable::after{
       content:"";
       position:absolute;
@@ -267,17 +273,6 @@
       background: rgba(255,255,255,.22);
       transform: translateX(calc(-100% + (var(--hold, 0) * 100%)));
       transition: transform .06s linear;
-      pointer-events:none;
-    }
-    .holdable::before{
-      content:"Hold 3s";
-      position:absolute;
-      right:10px;
-      top:50%;
-      transform: translateY(-50%);
-      font-size:.92rem;
-      font-weight:1000;
-      opacity:.92;
       pointer-events:none;
     }
 
@@ -298,23 +293,6 @@
     .inputSmall{width: 160px}
     .divider{height:2px; background:rgba(0,0,0,.08); margin:14px 0}
 
-    /* Default chores picker */
-    .defaultPickWrap{display:flex; flex-direction:column; gap:10px; margin-top:8px;}
-    .defaultList{display:grid; grid-template-columns: 1fr; gap:8px;}
-    .defaultItem{
-      display:flex;
-      align-items:flex-start;
-      gap:10px;
-      padding:10px 12px;
-      border-radius: var(--radius2);
-      border: var(--stroke) solid rgba(0,0,0,.06);
-      background: rgba(255,255,255,.90);
-      box-shadow: var(--shadow2);
-      user-select:none;
-    }
-    .defaultItem input{margin-top: 3px; width:22px; height:22px;}
-    .defaultText{font-weight:950; color:#08101f; line-height:1.25;}
-
     /* Toast */
     .toast{
       position:fixed;
@@ -332,7 +310,7 @@
       border: var(--stroke) solid rgba(255,255,255,.20);
     }
 
-    /* FULLSCREEN FX OVERLAY (praise + confetti + big emoji) */
+    /* FULLSCREEN FX OVERLAY */
     .fxOverlay{
       position:fixed;
       inset:0;
@@ -402,45 +380,36 @@
       100%{opacity:0; transform: translateY(-180px) rotate(280deg);}
     }
 
-    /* Locked chore badge */
-    .lockPill{
-      display:inline-block;
-      margin-left:8px;
-      padding:4px 8px;
-      border-radius:999px;
-      font-weight:1000;
-      font-size:.9rem;
-      background: rgba(2,6,23,.08);
-      border: var(--stroke) solid rgba(2,6,23,.08);
-      color:#0b1220;
-    }
-
-    /* Timer UI */
-    .timerRow{
+    /* Help button (reduce noise) */
+    .helpRow{
       display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-      margin-top:10px;
+      justify-content:flex-end;
+      margin: 0 0 8px;
     }
-    .timerPill{
-      display:inline-block;
-      padding:8px 12px;
+    .helpBtn{
+      border:none;
+      cursor:pointer;
+      width:44px; height:44px;
       border-radius:999px;
       font-weight:1000;
-      background: rgba(37,99,235,.10);
-      border: var(--stroke) solid rgba(37,99,235,.18);
-      color:#08101f;
+      font-size:1.15rem;
+      background: rgba(255,255,255,.92);
+      border: var(--stroke) solid rgba(0,0,0,.06);
       box-shadow: var(--shadow2);
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
     }
-    .timerDone{
-      background: rgba(22,163,74,.12);
-      border-color: rgba(22,163,74,.18);
-    }
-    .btnGo{
-      background: linear-gradient(135deg, rgba(34,211,238,.95), rgba(37,99,235,.95));
-      color:#08101f;
-      min-width: 140px;
+    .helpBtn:active{transform: scale(.97)}
+
+    .smallPill{
+      display:inline-block;
+      padding:7px 10px;
+      border-radius:999px;
+      font-weight:1000;
+      box-shadow: var(--shadow2);
+      background: rgba(255,255,255,.90);
+      border: var(--stroke) solid rgba(0,0,0,.06);
+      margin: 0 6px 6px 0;
     }
   </style>
 </head>
@@ -448,12 +417,12 @@
 <body>
 
   <!-- Fullscreen FX overlay -->
-  <div id="fxOverlay" class="fxOverlay" role="dialog" aria-modal="true" aria-label="Celebration">
+  <div id="fxOverlay" class="fxOverlay" role="dialog" aria-modal="true" aria-label="Dialog">
     <div class="fxCard">
       <div id="fxConfettiLayer" class="fxConfettiLayer"></div>
       <div id="fxEmoji" class="fxEmoji">⭐</div>
-      <div id="fxTitle" class="fxTitle">Great Job!</div>
-      <div id="fxSub" class="fxSub">Keep going.</div>
+      <div id="fxTitle" class="fxTitle">Nice!</div>
+      <div id="fxSub" class="fxSub"></div>
       <div class="fxBtnRow">
         <button class="btn btnBlue" id="fxCloseBtn" type="button">Continue</button>
       </div>
@@ -467,7 +436,7 @@
           <div class="robloxBadge" aria-hidden="true"></div>
           <div>
             <h1>Chore List</h1>
-            <p class="subtitle">Timed chores: tap GO, finish the timer, then hold the red button for 3 seconds to claim. Parent approves or declines.</p>
+            <p class="subtitle">Hold the red button to claim. Parent approves or declines.</p>
           </div>
         </div>
       </div>
@@ -480,7 +449,7 @@
 
     <!-- KID PAGE -->
     <div id="kidPage" class="grid">
-      <div class="card" id="kidScoreCard">
+      <div class="card stickyKidHeader" id="kidScoreCard">
         <div class="starHero">
           <div class="starCountBig">
             <div class="starEmojiBig">⭐</div>
@@ -489,10 +458,22 @@
           </div>
 
           <div class="miniBadges">
+            <div class="badge badgeQueue">
+              <div class="big">🟡</div>
+              <div>
+                <div><span style="font-size:1.15rem; font-weight:1000;">Waiting:</span>
+                  <span id="waitingKid" style="font-size:1.25rem; font-weight:1000;">0</span>
+                </div>
+                <div class="small">Bring iPad to parent</div>
+              </div>
+            </div>
+
             <div class="badge badgeStrike">
               <div class="big">❌</div>
               <div>
-                <div><span style="font-size:1.25rem; font-weight:1000;">Strikes:</span> <span id="strikesKid" style="font-size:1.35rem; font-weight:1000;">0</span><span style="color:var(--muted)">/3</span></div>
+                <div><span style="font-size:1.15rem; font-weight:1000;">Strikes:</span>
+                  <span id="strikesKid" style="font-size:1.25rem; font-weight:1000;">0</span><span style="color:var(--muted)">/3</span>
+                </div>
                 <div class="small">3 strikes = lose 1 ⭐</div>
               </div>
             </div>
@@ -521,20 +502,21 @@
 
         <div class="divider"></div>
 
-        <!-- Mystery chore button -->
-        <div class="sectionTitle" style="margin-bottom:8px;">Mystery Chore</div>
-        <div class="smallNote" id="mysteryNote">Ask a parent to add today’s mystery prompt.</div>
+        <!-- Boss + Mystery -->
+        <div class="sectionTitle" style="margin-bottom:8px;">Daily Specials</div>
         <div class="btnRow" style="justify-content:center;">
+          <button class="btn btnBlue" id="bossBtn" type="button">👑 Boss Button (2 ⭐)</button>
           <button class="btn btnPurple" id="mysteryBtn" type="button">🎁 Mystery Chore</button>
         </div>
+        <div class="smallNote" id="specialsNote" style="text-align:center; margin-top:10px;"></div>
       </div>
 
       <div class="card">
-        <div class="sectionTitle">Chores</div>
-        <div class="smallNote">
-          Red = timed or ready to claim. Yellow = claimed (waiting for parent). Green = approved.
+        <div class="helpRow">
+          <button class="helpBtn" id="helpBtnKid" type="button" aria-label="Help">?</button>
         </div>
-        <div class="holdHint">Timed chores: tap GO first, then hold the red button for 3 seconds to claim.</div>
+
+        <div class="sectionTitle">Chores</div>
         <ul id="kidChoreList"></ul>
       </div>
     </div>
@@ -542,7 +524,7 @@
     <!-- PARENT PAGE -->
     <div id="parentPage" class="hidden">
       <div class="card">
-        <div class="sectionTitle">🔒 Parent Page</div>
+        <div class="sectionTitle">Parent Page</div>
         <div class="smallNote">Enter passcode to unlock.</div>
 
         <div class="formRow">
@@ -571,7 +553,9 @@
                 <div class="badge badgeStrike">
                   <div class="big">❌</div>
                   <div>
-                    <div><span style="font-size:1.25rem; font-weight:1000;">Strikes:</span> <span id="strikesParent" style="font-size:1.35rem; font-weight:1000;">0</span><span style="color:var(--muted)">/3</span></div>
+                    <div><span style="font-size:1.15rem; font-weight:1000;">Strikes:</span>
+                      <span id="strikesParent" style="font-size:1.25rem; font-weight:1000;">0</span><span style="color:var(--muted)">/3</span>
+                    </div>
                     <div class="small">Parent controls only</div>
                   </div>
                 </div>
@@ -579,21 +563,15 @@
             </div>
 
             <div style="margin-top:8px;">
-              <span style="display:inline-block; padding:7px 10px; border-radius:999px; font-weight:1000; box-shadow: var(--shadow2); background: rgba(255,255,255,.90); margin: 0 6px 6px 0;">
-                Red: <span id="countPending">0</span>
-              </span>
-              <span style="display:inline-block; padding:7px 10px; border-radius:999px; font-weight:1000; box-shadow: var(--shadow2); background: rgba(245,158,11,.14); margin: 0 6px 6px 0; border: var(--stroke) solid rgba(245,158,11,.22);">
-                Yellow: <span id="countClaimed">0</span>
-              </span>
-              <span style="display:inline-block; padding:7px 10px; border-radius:999px; font-weight:1000; box-shadow: var(--shadow2); background: rgba(22,163,74,.12); margin: 0 6px 6px 0; border: var(--stroke) solid rgba(22,163,74,.18);">
-                Green: <span id="countApproved">0</span>
-              </span>
+              <span class="smallPill">Red: <span id="countPending">0</span></span>
+              <span class="smallPill" style="background: rgba(245,158,11,.14); border-color: rgba(245,158,11,.22);">Yellow: <span id="countClaimed">0</span></span>
+              <span class="smallPill" style="background: rgba(22,163,74,.12); border-color: rgba(22,163,74,.18);">Green: <span id="countApproved">0</span></span>
             </div>
 
             <div class="divider"></div>
 
             <div class="sectionTitle">Review Claimed Chores</div>
-            <div class="smallNote">Approve turns green. Decline resets to red and removes the earned star.</div>
+            <div class="smallNote">Approve turns green. Decline resets to red and removes the earned star(s).</div>
 
             <div class="btnRow" style="margin-bottom:10px;">
               <button class="btn btnGreen" id="approveAllBtn" type="button">✅ Approve All</button>
@@ -606,7 +584,7 @@
             <div class="divider"></div>
 
             <div class="sectionTitle">Reset the Day</div>
-            <div class="smallNote">Sets stars and strikes to 0 and turns all chores back to red.</div>
+            <div class="smallNote">Sets stars and strikes to 0 and turns all chores back to red. Clears Boss selection for the day.</div>
             <div class="btnRow">
               <button class="btn btnStrike" id="resetDayBtn" type="button">🔄 Reset Day</button>
             </div>
@@ -619,6 +597,10 @@
               <button class="btn btnGray" id="undoStrikeBtn" type="button">↩️ Undo Strike</button>
               <button class="btn btnGray" id="clearStrikesBtn" type="button">Clear Strikes</button>
             </div>
+
+            <div class="divider"></div>
+
+            <div class="smallNote" id="lastSavedLine" style="text-align:center;">Last saved: —</div>
           </div>
 
           <div class="card">
@@ -635,6 +617,17 @@
 
             <div class="divider"></div>
 
+            <div class="sectionTitle" style="font-size:1.18rem; margin-top:2px;">Boss Button (2 ⭐) - tag today’s chore</div>
+            <div class="smallNote">Boss Button is inactive until you select a chore.</div>
+            <div class="formRow" style="justify-content:flex-start">
+              <select id="bossSelect" class="inputWide"></select>
+              <button class="btn btnBlue" id="saveBossBtn" type="button">Save Boss</button>
+              <button class="btn btnGray" id="clearBossBtn" type="button">Clear Boss</button>
+            </div>
+            <div class="smallNote" style="margin-top:8px;">Boss chore: <span id="bossStatus">None</span></div>
+
+            <div class="divider"></div>
+
             <div class="sectionTitle" style="font-size:1.18rem; margin-top:2px;">Sound Effects</div>
             <div class="formRow" style="justify-content:flex-start">
               <label style="font-weight:1000; color:var(--muted); align-self:center;">Sounds</label>
@@ -643,18 +636,6 @@
                 <option value="off">Off</option>
               </select>
               <button class="btn btnBlue" id="saveSoundBtn" type="button">Save</button>
-            </div>
-
-            <div class="divider"></div>
-
-            <div class="sectionTitle" style="font-size:1.18rem; margin-top:2px;">Default Chores (check to add)</div>
-            <div class="smallNote">Defaults are preloaded once. You can still add more or edit/delete anything else.</div>
-            <div class="defaultPickWrap">
-              <div class="defaultList" id="defaultChoreList"></div>
-              <div class="btnRow">
-                <button class="btn btnPurple" id="addSelectedDefaultsBtn" type="button">➕ Add Selected Defaults</button>
-                <button class="btn btnGray" id="clearDefaultChecksBtn" type="button">Clear Checks</button>
-              </div>
             </div>
 
             <div class="divider"></div>
@@ -668,7 +649,7 @@
             <div class="divider"></div>
 
             <div class="sectionTitle">Edit / Delete / Reset</div>
-            <div class="smallNote">Locked chores cannot be renamed or deleted.</div>
+            <div class="smallNote">All chores can be renamed or deleted.</div>
             <ul id="parentChoreList"></ul>
 
             <div class="divider"></div>
@@ -703,17 +684,10 @@
 
 <script>
 (() => {
-  const STORAGE_KEY = "kids_chore_chart_v10_timers_go_parent_prompt";
+  const STORAGE_KEY = "kids_chore_chart_v11_sticky_help_boss_mystery";
 
   const MAX_STARS = 10;
   const STRIKES_MAX = 3;
-
-  // Locked chores (must exist and must stay at the top in this order)
-  const LOCKED_TOP = [
-    { key: "locked_ask",   name: "Ask mom/dad for a chore" },
-    { key: "locked_bed",   name: "Make bed, get dressed, and eat breakfast" },
-    { key: "locked_teeth", name: "Brush teeth in the morning" }
-  ];
 
   const PRAISE = [
     "Awesome work!",
@@ -728,22 +702,18 @@
     "Great hustle!"
   ];
 
-  // Defaults (first 10 will auto-populate ONE time if list is empty,
-  // but LOCKED_TOP always pins to the top even if user adds/edits others)
+  // 10 defaults auto-populate (Ask parent is NOT #1)
   const DEFAULT_CHORE_TEMPLATES = [
-    "Ask mom/dad for a chore",
     "Make bed, get dressed, and eat breakfast",
     "Brush teeth in the morning",
-
+    "Put dirty clothes in the hamper",
     "Put dishes in the sink (or dishwasher)",
     "Pick up toys and clean your room floor",
     "Pack backpack / get school stuff ready",
     "Read a book for 10 minutes",
-    "Feed the pet (if you have one)",
     "Brush teeth at night",
-    "Put dirty clothes in the hamper",
-    "Complete homework",
-    "Make a craft"
+    "Ask mom/dad for a chore",
+    "Help set the table"
   ];
 
   const defaultState = () => ({
@@ -752,17 +722,20 @@
     strikes: 0,
     lastDateKey: dateKey(new Date()),
     lastPerfectDayKey: "",
-    mysteryUsedKey: ""
+    mysteryUsedKey: "",
+    bossUsedKey: "" // dateKey when boss used
   });
 
   const defaults = {
     pointsPerChore: 10,
     dailyGoalStars: 8,
     autoDailyReset: "on",
-    parentPasscode: "123", // fixed, not shown, not changeable
+    parentPasscode: "123", // fixed
     soundOn: true,
     mysteryPrompt: "",
-    state: defaultState()
+    bossChoreId: "", // parent selects daily
+    state: defaultState(),
+    meta: { lastSavedMs: 0 }
   };
 
   let app = loadState();
@@ -783,9 +756,13 @@
   const kidChoreList = document.getElementById("kidChoreList");
   const progressTextKid = document.getElementById("progressTextKid");
   const progressFillKid = document.getElementById("progressFillKid");
+  const waitingKid = document.getElementById("waitingKid");
+
+  const helpBtnKid = document.getElementById("helpBtnKid");
 
   const mysteryBtn = document.getElementById("mysteryBtn");
-  const mysteryNote = document.getElementById("mysteryNote");
+  const bossBtn = document.getElementById("bossBtn");
+  const specialsNote = document.getElementById("specialsNote");
 
   // Fullscreen FX overlay
   const fxOverlay = document.getElementById("fxOverlay");
@@ -828,10 +805,6 @@
   const dailyGoalStars = document.getElementById("dailyGoalStars");
   const saveSettingsBtn = document.getElementById("saveSettingsBtn");
 
-  const defaultChoreList = document.getElementById("defaultChoreList");
-  const addSelectedDefaultsBtn = document.getElementById("addSelectedDefaultsBtn");
-  const clearDefaultChecksBtn = document.getElementById("clearDefaultChecksBtn");
-
   const manualSaveBtn = document.getElementById("manualSaveBtn");
 
   const mysteryPromptInput = document.getElementById("mysteryPromptInput");
@@ -839,20 +812,22 @@
   const clearMysteryPromptBtn = document.getElementById("clearMysteryPromptBtn");
   const mysteryPromptStatus = document.getElementById("mysteryPromptStatus");
 
+  const bossSelect = document.getElementById("bossSelect");
+  const saveBossBtn = document.getElementById("saveBossBtn");
+  const clearBossBtn = document.getElementById("clearBossBtn");
+  const bossStatus = document.getElementById("bossStatus");
+
   const soundSelect = document.getElementById("soundSelect");
   const saveSoundBtn = document.getElementById("saveSoundBtn");
 
-  // Ensure schema + enforce locked top chores
-  hardenApp();
+  const lastSavedLine = document.getElementById("lastSavedLine");
 
-  // Daily reset
+  // Schema + daily reset
+  hardenApp();
   maybeDailyReset();
 
-  // Populate defaults once if empty
-  autopopulateDefaultsOnce();
-
-  // Default picker
-  renderDefaultChorePicker();
+  // Ensure we have 10 chores without manual adding (only when list is empty)
+  autopopulateDefaultsIfEmpty();
 
   // Tabs: auto-lock parent on return to kid
   kidTabBtn.addEventListener("click", () => showTab("kid"));
@@ -911,13 +886,24 @@
     document.body.style.overflow = "";
   }
 
-  // Mystery button: must STATE what it is, fullscreen, then add chore
+  // Help (reduces clutter by moving explanations into a single dialog)
+  helpBtnKid.addEventListener("click", () => {
+    showFx({
+      emoji: "❓",
+      title: "How it works",
+      sub: "Red = ready. Hold red to claim.\nYellow = waiting for parent.\nGreen = approved.\nBring the iPad to a parent after you claim.",
+      confetti: false,
+      sound: "arm"
+    });
+  });
+
+  // Mystery chore: reveal only AFTER click (no pre-reveal text)
   mysteryBtn.addEventListener("click", () => {
     const prompt = (app.mysteryPrompt || "").trim();
     const today = dateKey(new Date());
 
     if(!prompt){
-      toast("Ask a parent for today’s prompt");
+      toast("Ask a parent to set today’s mystery");
       if(app.soundOn) sfx("error");
       return;
     }
@@ -927,7 +913,6 @@
       return;
     }
 
-    // Show fullscreen overlay stating the prompt
     showFx({
       emoji: "🎁",
       title: "Mystery Chore!",
@@ -936,22 +921,52 @@
       sound: "mystery"
     });
 
-    // Add chore (no timer for mystery by default)
     app.state.chores.push({
       id: rid(),
       name: "🎁 " + prompt,
       statusToday: "pending",
       approvedAllTime: 0,
       createdAt: Date.now(),
-      locked: false,
-      lockKey: "",
-      timerSeconds: 0,
-      timerEndsAt: 0,
-      timerDoneToday: false
+      pointsAwarded: app.pointsPerChore
     });
 
     app.state.mysteryUsedKey = today;
+    saveApp();
+    renderAll();
+  });
 
+  // Boss button: inactive until parent tags a chore; gives 2 stars (2x points) once/day
+  bossBtn.addEventListener("click", () => {
+    const today = dateKey(new Date());
+
+    if(!app.bossChoreId){
+      toast("Boss is not set yet");
+      if(app.soundOn) sfx("error");
+      return;
+    }
+    if(app.state.bossUsedKey === today){
+      toast("Boss already used today");
+      if(app.soundOn) sfx("error");
+      return;
+    }
+
+    const c = app.state.chores.find(x => x.id === app.bossChoreId);
+    if(!c){
+      toast("Boss chore was deleted");
+      app.bossChoreId = "";
+      saveApp();
+      renderAll();
+      return;
+    }
+    if(c.statusToday !== "pending"){
+      toast("Boss chore is not red");
+      if(app.soundOn) sfx("error");
+      return;
+    }
+
+    // Claim the boss chore with 2x points (2 stars)
+    claimChore(c.id, { multiplier: 2, forceBringToParent: true, title: "Boss Claimed!", emoji: "👑" });
+    app.state.bossUsedKey = today;
     saveApp();
     renderAll();
   });
@@ -963,12 +978,12 @@
     if(!p) return toast("Enter a prompt");
     app.mysteryPrompt = p;
 
-    // Reset used today so it works immediately
+    // Reset used so it can be used immediately
     app.state.mysteryUsedKey = "";
 
     saveApp();
     renderAll();
-    toast("Mystery prompt saved");
+    toast("Mystery saved");
   });
 
   clearMysteryPromptBtn.addEventListener("click", () => {
@@ -976,7 +991,27 @@
     app.mysteryPrompt = "";
     saveApp();
     renderAll();
-    toast("Mystery prompt cleared");
+    toast("Mystery cleared");
+  });
+
+  // Parent: boss save/clear
+  saveBossBtn.addEventListener("click", () => {
+    if(!unlocked) return;
+    const val = bossSelect.value || "";
+    app.bossChoreId = val;
+    app.state.bossUsedKey = ""; // allow use immediately after selecting
+    saveApp();
+    renderAll();
+    toast("Boss saved");
+  });
+
+  clearBossBtn.addEventListener("click", () => {
+    if(!unlocked) return;
+    app.bossChoreId = "";
+    app.state.bossUsedKey = "";
+    saveApp();
+    renderAll();
+    toast("Boss cleared");
   });
 
   // Parent: sound
@@ -987,69 +1022,11 @@
     toast("Sound saved");
   });
 
-  // Parent: add selected defaults
-  addSelectedDefaultsBtn.addEventListener("click", () => {
-    if(!unlocked) return;
-    const checked = [...defaultChoreList.querySelectorAll("input[type='checkbox']:checked")];
-    if(checked.length === 0) return toast("Check at least one default chore");
-
-    let added = 0;
-    checked.forEach(cb => {
-      const name = (cb.getAttribute("data-name") || "").trim();
-      if(!name) return;
-
-      // If matches locked chore, ensure it exists locked (do not add duplicate)
-      const lockHit = LOCKED_TOP.find(x => x.name.toLowerCase() === name.toLowerCase());
-      if(lockHit){
-        ensureLockedTopExists();
-        return;
-      }
-
-      if(app.state.chores.some(c => norm(c.name) === norm(name))) return;
-
-      app.state.chores.push({
-        id: rid(),
-        name,
-        statusToday: "pending",
-        approvedAllTime: 0,
-        createdAt: Date.now() + Math.floor(Math.random()*10),
-        locked: false,
-        lockKey: "",
-        timerSeconds: guessTimerSeconds(name),
-        timerEndsAt: 0,
-        timerDoneToday: false
-      });
-      added += 1;
-    });
-
-    saveApp();
-    renderAll();
-    toast(added > 0 ? `Added ${added} chore(s)` : "Already added");
-  });
-
-  clearDefaultChecksBtn.addEventListener("click", () => {
-    if(!unlocked) return;
-    [...defaultChoreList.querySelectorAll("input[type='checkbox']")].forEach(cb => cb.checked = false);
-    toast("Cleared");
-  });
-
   // Parent: add chore
   addChoreBtn.addEventListener("click", () => {
     if(!unlocked) return;
     const name = (newChoreName.value || "").trim();
     if(!name) return;
-
-    // If user tries to add locked name, just enforce locked
-    const lockHit = LOCKED_TOP.find(x => x.name.toLowerCase() === name.toLowerCase());
-    if(lockHit){
-      ensureLockedTopExists();
-      newChoreName.value = "";
-      saveApp();
-      renderAll();
-      toast("Locked chore is already at the top");
-      return;
-    }
-
     if(app.state.chores.some(c => norm(c.name) === norm(name))) return toast("Already added");
 
     app.state.chores.push({
@@ -1058,11 +1035,7 @@
       statusToday: "pending",
       approvedAllTime: 0,
       createdAt: Date.now(),
-      locked: false,
-      lockKey: "",
-      timerSeconds: guessTimerSeconds(name),
-      timerEndsAt: 0,
-      timerDoneToday: false
+      pointsAwarded: app.pointsPerChore
     });
 
     newChoreName.value = "";
@@ -1130,6 +1103,13 @@
     app.pointsPerChore = clampInt(pointsPerChore.value, 1, 100);
     app.autoDailyReset = autoResetSelect.value === "off" ? "off" : "on";
     app.dailyGoalStars = clampInt(dailyGoalStars.value, 1, MAX_STARS);
+
+    // Update existing chores default award (does not change already-earned points)
+    app.state.chores.forEach(c => {
+      if(!Number.isFinite(Number(c.pointsAwarded))) c.pointsAwarded = app.pointsPerChore;
+      // keep existing pointsAwarded if already set
+    });
+
     saveApp();
     renderAll();
     toast("Saved settings");
@@ -1145,28 +1125,22 @@
   renderAll();
 
   // ---------------- Core logic ----------------
-  function claimChore(choreId){
+  function claimChore(choreId, opts = {}){
     const c = app.state.chores.find(x => x.id === choreId);
     if(!c) return;
     if(c.statusToday !== "pending") return;
 
-    // Timed chores require timer completion
-    if((c.timerSeconds || 0) > 0 && !c.timerDoneToday){
-      showFx({
-        emoji: "⏱️",
-        title: "Start the timer first",
-        sub: "Tap GO, finish the timer, then hold to claim.",
-        confetti: false,
-        sound: "error"
-      });
-      return;
-    }
-
     c.statusToday = "claimed";
 
+    const multiplier = clampInt(opts.multiplier ?? 1, 1, 5);
+    const award = clampInt((c.pointsAwarded ?? app.pointsPerChore) * multiplier, 1, 1000);
+
     const beforeStars = starsFromPoints(app.state.points);
-    addPoints(app.state, app.pointsPerChore);
+    addPoints(app.state, award);
     const afterStars = starsFromPoints(app.state.points);
+
+    // Move claimed to bottom (within its status group): bump createdAt
+    c.createdAt = Date.now() + 5;
 
     saveApp();
     renderAll();
@@ -1175,9 +1149,11 @@
     const bringToParent = "Bring the iPad to a parent to approve.";
 
     showFx({
-      emoji: afterStars > beforeStars ? "⭐" : "🎉",
-      title: praise,
-      sub: afterStars > beforeStars ? `Star earned! ${bringToParent}` : `Claimed! ${bringToParent}`,
+      emoji: opts.emoji || (afterStars > beforeStars ? "⭐" : "🎉"),
+      title: opts.title || praise,
+      sub: (afterStars > beforeStars)
+        ? `Star earned! ${bringToParent}`
+        : `Claimed! ${bringToParent}`,
       confetti: true,
       sound: afterStars > beforeStars ? "star" : "claim"
     });
@@ -1205,11 +1181,19 @@
     if(!c) return;
     if(c.statusToday !== "claimed") return;
 
+    const award = clampInt(c.pointsAwarded ?? app.pointsPerChore, 1, 1000);
+
     const beforeStars = starsFromPoints(app.state.points);
-    addPoints(app.state, -app.pointsPerChore);
+    addPoints(app.state, -award);
     const afterStars = starsFromPoints(app.state.points);
 
     c.statusToday = "pending";
+
+    // If declined chore was the boss selection, clear it so Boss Button becomes inactive again
+    if(app.bossChoreId === c.id){
+      app.bossChoreId = "";
+      app.state.bossUsedKey = "";
+    }
 
     saveApp();
     renderAll();
@@ -1229,17 +1213,24 @@
     if(!c) return;
 
     if(c.statusToday === "claimed"){
-      addPoints(app.state, -app.pointsPerChore);
+      const award = clampInt(c.pointsAwarded ?? app.pointsPerChore, 1, 1000);
+      addPoints(app.state, -award);
     }
     c.statusToday = "pending";
-    // do not reset timerDoneToday; parent can choose to reset day if needed
+
+    // If reset was the boss selection, clear it so Boss Button becomes inactive
+    if(app.bossChoreId === c.id){
+      app.bossChoreId = "";
+      app.state.bossUsedKey = "";
+    }
+
     saveApp();
     renderAll();
     toast("Reset to red");
   }
 
   function addPoints(state, delta){
-    const maxPoints = MAX_STARS * clampInt(app.pointsPerChore, 1, 100);
+    const maxPoints = MAX_STARS * clampInt(app.pointsPerChore, 1, 100) * 3; // allow boss/multipliers without clipping early
     state.points = clampInt(state.points + delta, 0, maxPoints);
   }
 
@@ -1281,18 +1272,17 @@
 
     app.state.chores.forEach(c => {
       c.statusToday = "pending";
-      c.timerEndsAt = 0;
-      c.timerDoneToday = false;
     });
 
     app.state.lastPerfectDayKey = "";
     app.state.mysteryUsedKey = "";
+    app.state.bossUsedKey = "";
+    app.bossChoreId = ""; // boss must be tagged daily
     app.state.lastDateKey = dateKey(new Date());
   }
 
   function maybeDailyReset(){
     if(app.autoDailyReset !== "on") return;
-
     const today = dateKey(new Date());
     if(app.state.lastDateKey !== today){
       resetDay();
@@ -1300,220 +1290,34 @@
     }
   }
 
-  // ---------------- Timers (auto per chore) ----------------
-  function guessTimerSeconds(name){
-    const n = String(name || "").toLowerCase();
+  function autopopulateDefaultsIfEmpty(){
+    if(app.state.chores.length > 0) return;
 
-    // Hard rules first
-    if(n.includes("brush teeth") && n.includes("night")) return 120;
-    if(n.includes("brush teeth")) return 120;
-
-    if(n.includes("read") && n.includes("10")) return 600;
-    if(n.includes("read")) return 600;
-
-    if(n.includes("make bed")) return 600;
-    if(n.includes("get dressed")) return 600;
-    if(n.includes("eat breakfast")) return 600;
-
-    if(n.includes("clean your room") || n.includes("pick up toys")) return 300;
-    if(n.includes("dishes") || n.includes("dishwasher") || n.includes("sink")) return 120;
-
-    if(n.includes("pack backpack") || n.includes("school stuff")) return 180;
-    if(n.includes("homework")) return 600;
-
-    if(n.includes("feed the pet") || n.includes("feed pet")) return 60;
-
-    // Ask mom/dad: no timer required
-    if(n.includes("ask mom") || n.includes("ask dad")) return 0;
-
-    // Mystery: no timer required
-    if(n.includes("🎁")) return 0;
-
-    // Default: no timer required
-    return 0;
-  }
-
-  function nowMs(){ return Date.now(); }
-
-  function isTimerRunning(c){
-    return (c.timerEndsAt || 0) > nowMs();
-  }
-
-  function timerRemainingMs(c){
-    return Math.max(0, (c.timerEndsAt || 0) - nowMs());
-  }
-
-  function fmtMMSS(ms){
-    const s = Math.ceil(ms / 1000);
-    const mm = String(Math.floor(s / 60)).padStart(2,"0");
-    const ss = String(s % 60).padStart(2,"0");
-    return `${mm}:${ss}`;
-  }
-
-  function fmtMinutes(secs){
-    const m = Math.max(0, Math.round(secs / 60));
-    return (m <= 1) ? "1 min" : `${m} min`;
-  }
-
-  function startChoreTimer(choreId){
-    const c = app.state.chores.find(x => x.id === choreId);
-    if(!c) return;
-    if(c.statusToday !== "pending") return;
-
-    const secs = clampInt(c.timerSeconds ?? 0, 0, 3600);
-    if(secs <= 0){
-      toast("No timer needed for this chore");
-      return;
-    }
-
-    if(c.timerDoneToday){
-      toast("Timer already completed");
-      return;
-    }
-
-    c.timerEndsAt = nowMs() + (secs * 1000);
-    saveApp();
-    renderAll();
-    startTimerTick();
-    if(app.soundOn) sfx("arm");
-  }
-
-  let timerRAF = null;
-  function startTimerTick(){
-    if(timerRAF) return;
-
-    const loop = () => {
-      let changed = false;
-
-      for(const c of app.state.chores){
-        if(c.timerEndsAt && c.timerEndsAt <= nowMs()){
-          c.timerEndsAt = 0;
-          if(!c.timerDoneToday){
-            c.timerDoneToday = true;
-            changed = true;
-          }
-        }
-      }
-
-      if(changed){
-        saveApp();
-        renderAll();
-        toast("Timer done ✅");
-        if(app.soundOn) sfx("star");
-      } else {
-        if(app.state.chores.some(isTimerRunning)){
-          renderAll();
-        }
-      }
-
-      if(app.state.chores.some(isTimerRunning)){
-        timerRAF = requestAnimationFrame(loop);
-      } else {
-        timerRAF = null;
-      }
-    };
-
-    timerRAF = requestAnimationFrame(loop);
-  }
-
-  // ---------------- Locked top chores enforcement ----------------
-  function ensureLockedTopExists(){
-    // Add missing locked chores and enforce correct keys/names
-    LOCKED_TOP.forEach((lt, idx) => {
-      const existingByKey = app.state.chores.find(c => c.lockKey === lt.key);
-      if(existingByKey){
-        existingByKey.name = lt.name;
-        existingByKey.locked = true;
-        existingByKey.timerSeconds = guessTimerSeconds(existingByKey.name);
-        return;
-      }
-
-      // If exists by name but not locked, convert it
-      const existingByName = app.state.chores.find(c => norm(c.name) === norm(lt.name));
-      if(existingByName){
-        existingByName.locked = true;
-        existingByName.lockKey = lt.key;
-        existingByName.name = lt.name;
-        existingByName.timerSeconds = guessTimerSeconds(existingByName.name);
-        return;
-      }
-
-      // else add it
-      app.state.chores.push({
-        id: rid(),
-        name: lt.name,
-        statusToday: "pending",
-        approvedAllTime: 0,
-        createdAt: Date.now() + idx,
-        locked: true,
-        lockKey: lt.key,
-        timerSeconds: guessTimerSeconds(lt.name),
-        timerEndsAt: 0,
-        timerDoneToday: false
-      });
-    });
-
-    // If any locked chores have duplicate names, keep one locked and rename duplicates (rare, but safe)
-    const seen = new Set();
-    app.state.chores.forEach(c => {
-      const n = norm(c.name);
-      if(seen.has(n) && c.locked){
-        c.locked = false;
-        c.lockKey = "";
-      } else {
-        seen.add(n);
-      }
-    });
-  }
-
-  function autopopulateDefaultsOnce(){
-    if(app.state.chores.length > 0) {
-      ensureLockedTopExists();
-      saveApp();
-      return;
-    }
-
-    ensureLockedTopExists();
-
-    const wantCount = 10;
-    const candidates = DEFAULT_CHORE_TEMPLATES
-      .map(s => s.trim())
-      .filter(Boolean);
-
-    for(const name of candidates){
-      if(app.state.chores.length >= wantCount) break;
-      if(app.state.chores.some(c => norm(c.name) === norm(name))) continue;
-
-      const lockHit = LOCKED_TOP.find(x => norm(x.name) === norm(name));
-      if(lockHit) continue;
-
+    DEFAULT_CHORE_TEMPLATES.slice(0,10).forEach((name, idx) => {
       app.state.chores.push({
         id: rid(),
         name,
         statusToday: "pending",
         approvedAllTime: 0,
-        createdAt: Date.now() + Math.floor(Math.random()*10),
-        locked: false,
-        lockKey: "",
-        timerSeconds: guessTimerSeconds(name),
-        timerEndsAt: 0,
-        timerDoneToday: false
+        createdAt: Date.now() + idx,
+        pointsAwarded: app.pointsPerChore
       });
-    }
+    });
 
-    ensureLockedTopExists();
     saveApp();
   }
 
   // ---------------- UI rendering ----------------
   function renderAll(){
-    ensureLockedTopExists();
-
     const stars = starsFromPoints(app.state.points);
 
     starsBigKid.textContent = stars;
     strikesKid.textContent = app.state.strikes;
     goalKidPill.textContent = `${app.dailyGoalStars} ⭐`;
+
+    // Waiting count
+    const waiting = app.state.chores.filter(c => c.statusToday === "claimed").length;
+    waitingKid.textContent = waiting;
 
     // Progress bar
     progressTextKid.textContent = `${stars}/${MAX_STARS} stars`;
@@ -1535,42 +1339,33 @@
       : (stars >= goal) ? `Goal reached: ${stars} stars (goal is ${goal}).`
       : `You have ${stars} stars. Goal is ${goal}.`;
 
-    // Mystery note
+    // Specials note + button states
     const today = dateKey(new Date());
-    const prompt = (app.mysteryPrompt || "").trim();
-    const usedToday = (app.state.mysteryUsedKey === today);
-    if(!prompt){
-      mysteryNote.textContent = "Ask a parent to add today’s mystery prompt.";
-      mysteryBtn.disabled = true;
-    } else if(usedToday){
-      mysteryNote.textContent = "Mystery chore used today. Come back tomorrow.";
-      mysteryBtn.disabled = true;
-    } else {
-      mysteryNote.textContent = `Tap to reveal: "${prompt}"`;
-      mysteryBtn.disabled = false;
-    }
 
-    // Chores list (LOCKED_TOP pinned first, then pending, claimed, approved)
+    // Boss: inactive until tagged; then once/day
+    const bossReady = !!app.bossChoreId && app.state.bossUsedKey !== today;
+    bossBtn.disabled = !bossReady;
+    const bossName = app.bossChoreId ? (app.state.chores.find(c => c.id === app.bossChoreId)?.name || "") : "";
+    const bossLine = app.bossChoreId ? `Boss: ${bossName}${app.state.bossUsedKey === today ? " (used)" : ""}` : "Boss is not set yet.";
+
+    // Mystery: enabled only if prompt exists and not used today (do NOT show prompt)
+    const prompt = (app.mysteryPrompt || "").trim();
+    const mysteryReady = !!prompt && app.state.mysteryUsedKey !== today;
+    mysteryBtn.disabled = !mysteryReady;
+    const mysteryLine = !prompt ? "Mystery is not set yet." : (app.state.mysteryUsedKey === today ? "Mystery used today." : "Mystery is ready.");
+
+    specialsNote.textContent = `${bossLine}  |  ${mysteryLine}`;
+
+    // Chores list (status order + keep claimed moved down via updated createdAt)
     kidChoreList.innerHTML = "";
 
     const orderWeight = (c) => {
-      if(c.locked) return -10;
       return (c.statusToday === "pending") ? 0 : (c.statusToday === "claimed" ? 1 : 2);
-    };
-
-    const lockIndex = (c) => {
-      const i = LOCKED_TOP.findIndex(x => x.key === c.lockKey);
-      return (i >= 0) ? i : 999;
     };
 
     const sorted = [...app.state.chores].sort((a,b) => {
       const wa = orderWeight(a), wb = orderWeight(b);
       if(wa !== wb) return wa - wb;
-
-      if(a.locked && b.locked){
-        const la = lockIndex(a), lb = lockIndex(b);
-        if(la !== lb) return la - lb;
-      }
 
       const ca = Number(a.createdAt) || 0;
       const cb = Number(b.createdAt) || 0;
@@ -1583,94 +1378,55 @@
       li.className = "choreItem";
 
       const meta =
-        c.statusToday === "pending"  ? "Status: Red"
-        : c.statusToday === "claimed" ? "Status: Waiting for parent"
-        : "Status: Approved";
+        c.statusToday === "pending"  ? "Red"
+        : c.statusToday === "claimed" ? "Waiting"
+        : "Approved";
 
       const btnClass =
         c.statusToday === "pending" ? "btnRed"
         : c.statusToday === "claimed" ? "btnYellow"
         : "btnGreen";
 
-      // Red button has no wording requirement (use icon only so it isn't blank)
       const btnText =
-        c.statusToday === "pending" ? "✋"
-        : c.statusToday === "claimed" ? "✅ Claimed (waiting)"
-        : "✅ Approved";
+        c.statusToday === "pending" ? "Claim"
+        : c.statusToday === "claimed" ? "Claimed"
+        : "Approved";
 
       const statusIcon =
         c.statusToday === "pending" ? "🔴"
         : c.statusToday === "claimed" ? "🟡"
         : "🟢";
 
-      const lockTag = c.locked ? `<span class="lockPill">LOCKED</span>` : "";
-
-      // Timer logic for pending chores
-      const needsTimer = (c.statusToday === "pending" && (c.timerSeconds || 0) > 0);
-      const running = needsTimer && isTimerRunning(c);
-      const done = needsTimer && !!c.timerDoneToday;
-
-      const holdDisabled =
-        (c.statusToday !== "pending") ? true :
-        (needsTimer && !done) ? true :
-        false;
-
-      const disabledAttr = holdDisabled ? "disabled" : "";
-      const ariaLabel = (!holdDisabled && c.statusToday === "pending") ? "Hold 3 seconds to claim" : "Status";
-
-      const timerUi = (needsTimer)
-        ? `
-          <div class="timerRow">
-            <button class="btn btnGo" type="button" ${done ? "disabled" : ""} data-go="1">
-              ${running ? "⏱ Running" : "▶️ GO"}
-            </button>
-            <span class="timerPill ${done ? "timerDone" : ""}">
-              ${done ? "Timer complete ✅" : (running ? fmtMMSS(timerRemainingMs(c)) : `Time: ${fmtMinutes(c.timerSeconds||0)}`)}
-            </span>
-          </div>
-        `
-        : "";
-
       li.innerHTML = `
         <div class="choreTop">
-          <div class="choreName">${statusIcon} ${escapeHtml(c.name)} ${lockTag}</div>
+          <div class="choreName">${statusIcon} ${escapeHtml(c.name)}</div>
           <div class="choreMeta">${meta}</div>
         </div>
 
         <div class="btnRow">
-          <button class="btn ${btnClass} ${(!holdDisabled && c.statusToday === "pending") ? "holdable" : ""}" type="button" ${disabledAttr}
-                  aria-label="${ariaLabel}">
+          <button class="btn ${btnClass} ${(c.statusToday === "pending") ? "holdable" : ""}" type="button"
+                  ${c.statusToday !== "pending" ? "disabled" : ""} aria-label="Claim">
             ${btnText}
           </button>
         </div>
-
-        ${timerUi}
       `;
 
       const mainBtn = li.querySelector(".btnRow button");
 
-      // Attach GO handler if present
-      const goBtn = li.querySelector("button[data-go='1']");
-      if(goBtn){
-        goBtn.addEventListener("click", () => startChoreTimer(c.id));
-      }
-
-      // Attach hold-to-claim only if enabled
-      if(c.statusToday === "pending" && !holdDisabled){
+      if(c.statusToday === "pending"){
         attachHoldToClaim(mainBtn, () => claimChore(c.id));
       }
 
       kidChoreList.appendChild(li);
     });
 
-    // If any timer is running, keep ticking
-    if(app.state.chores.some(isTimerRunning)) startTimerTick();
-
     if(unlocked){
       renderParentSummary();
       renderParentReview();
       renderParentChores();
       syncParentFields();
+      renderBossSelect();
+      renderLastSaved();
     }
   }
 
@@ -1692,7 +1448,9 @@
 
   function renderParentReview(){
     parentReviewList.innerHTML = "";
-    const claimedChores = app.state.chores.filter(c => c.statusToday === "claimed");
+    const claimedChores = [...app.state.chores]
+      .filter(c => c.statusToday === "claimed")
+      .sort((a,b) => (Number(a.createdAt)||0) - (Number(b.createdAt)||0));
 
     if(claimedChores.length === 0){
       const li = document.createElement("li");
@@ -1705,17 +1463,13 @@
     claimedChores.forEach(c => {
       const li = document.createElement("li");
       li.className = "choreItem";
-
-      const needsTimer = ((c.timerSeconds || 0) > 0);
-      const timerTag = needsTimer ? (c.timerDoneToday ? "⏱ Timer done ✅" : "⏱ Timer not used") : "⏱ No timer";
-
       li.innerHTML = `
         <div class="choreTop">
           <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
             <input type="checkbox" data-id="${escapeAttr(c.id)}" style="width:22px; height:22px;" />
             <div class="choreName">🟡 ${escapeHtml(c.name)}</div>
           </div>
-          <div class="choreMeta">${timerTag}</div>
+          <div class="choreMeta">${(c.id === app.bossChoreId) ? "👑 Boss" : ""}</div>
         </div>
         <div class="btnRow">
           <button class="btn btnGreen" type="button">✅ Approve</button>
@@ -1732,19 +1486,10 @@
   function renderParentChores(){
     parentChoreList.innerHTML = "";
 
-    const orderWeight = (c) => c.locked ? -10 : (c.statusToday === "pending" ? 0 : (c.statusToday === "claimed" ? 1 : 2));
-    const lockIndex = (c) => {
-      const i = LOCKED_TOP.findIndex(x => x.key === c.lockKey);
-      return (i >= 0) ? i : 999;
-    };
-
+    const orderWeight = (c) => (c.statusToday === "pending" ? 0 : (c.statusToday === "claimed" ? 1 : 2));
     const sorted = [...app.state.chores].sort((a,b) => {
       const wa = orderWeight(a), wb = orderWeight(b);
       if(wa !== wb) return wa - wb;
-      if(a.locked && b.locked){
-        const la = lockIndex(a), lb = lockIndex(b);
-        if(la !== lb) return la - lb;
-      }
       const ca = Number(a.createdAt) || 0;
       const cb = Number(b.createdAt) || 0;
       if(ca !== cb) return ca - cb;
@@ -1760,27 +1505,20 @@
         : c.statusToday === "claimed" ? `🟡 Yellow`
         : `🟢 Green`;
 
-      const lockTag = c.locked ? `<span class="lockPill">LOCKED</span>` : "";
-
-      const timerInfo = ((c.timerSeconds || 0) > 0)
-        ? `<span class="timerPill" style="margin-top:8px; display:inline-block;">⏱ ${fmtMinutes(c.timerSeconds||0)}</span>`
-        : `<span class="timerPill" style="margin-top:8px; display:inline-block;">⏱ No timer</span>`;
-
       li.innerHTML = `
         <div class="choreTop">
           <div style="flex:1; min-width:240px;">
-            <div class="smallNote" style="margin:0 0 6px;">Name ${lockTag}</div>
-            <input class="inputWide" data-id="${escapeAttr(c.id)}" type="text" value="${escapeAttr(c.name)}" ${c.locked ? "disabled" : ""} />
+            <div class="smallNote" style="margin:0 0 6px;">Name ${(c.id === app.bossChoreId) ? " (👑 Boss)" : ""}</div>
+            <input class="inputWide" data-id="${escapeAttr(c.id)}" type="text" value="${escapeAttr(c.name)}" />
             <div style="margin-top:8px; font-weight:950; color: var(--muted);">${statusChip}</div>
-            ${timerInfo}
           </div>
-          <div class="choreMeta">Approved all-time: ${c.approvedAllTime}</div>
+          <div class="choreMeta">Approved all-time: ${clampInt(c.approvedAllTime ?? 0, 0, 999999)}</div>
         </div>
 
         <div class="btnRow">
-          <button class="btn btnBlue" type="button" ${c.locked ? "disabled" : ""}>💾 Save Name</button>
-          <button class="btn btnGray" type="button">↩️ Reset Today Status</button>
-          <button class="btn btnStrike" type="button" ${c.locked ? "disabled" : ""}>🗑 Delete</button>
+          <button class="btn btnBlue" type="button">💾 Save Name</button>
+          <button class="btn btnGray" type="button">↩️ Reset Today</button>
+          <button class="btn btnStrike" type="button">🗑 Delete</button>
         </div>
       `;
 
@@ -1788,20 +1526,13 @@
       const [saveBtn, resetBtn2, delBtn] = li.querySelectorAll("button");
 
       saveBtn.addEventListener("click", () => {
-        if(c.locked) return toast("Locked chore");
         const newName = (input.value || "").trim();
         if(!newName) return toast("Enter a name");
-
-        if(LOCKED_TOP.some(x => norm(x.name) === norm(newName))){
-          ensureLockedTopExists();
-          return toast("That name is reserved (locked top chore).");
-        }
 
         const exists = app.state.chores.some(x => x.id !== c.id && norm(x.name) === norm(newName));
         if(exists) return toast("Duplicate name");
 
         c.name = newName;
-        c.timerSeconds = guessTimerSeconds(c.name); // auto-update timer if name changes
         saveApp();
         renderAll();
         toast("Saved");
@@ -1810,10 +1541,18 @@
       resetBtn2.addEventListener("click", () => resetTodayStatus(c.id));
 
       delBtn.addEventListener("click", () => {
-        if(c.locked) return toast("Locked chore");
+        // If deleting a claimed chore, remove points that were awarded for that claim
         if(c.statusToday === "claimed"){
-          addPoints(app.state, -app.pointsPerChore);
+          const award = clampInt(c.pointsAwarded ?? app.pointsPerChore, 1, 1000);
+          addPoints(app.state, -award);
         }
+
+        // If deleting the boss selection, clear boss
+        if(app.bossChoreId === c.id){
+          app.bossChoreId = "";
+          app.state.bossUsedKey = "";
+        }
+
         app.state.chores = app.state.chores.filter(x => x.id !== c.id);
         saveApp();
         renderAll();
@@ -1824,6 +1563,25 @@
     });
   }
 
+  function renderBossSelect(){
+    bossSelect.innerHTML = "";
+
+    const optNone = document.createElement("option");
+    optNone.value = "";
+    optNone.textContent = "Select a chore…";
+    bossSelect.appendChild(optNone);
+
+    const pending = [...app.state.chores].filter(c => c.statusToday === "pending");
+    pending.forEach(c => {
+      const o = document.createElement("option");
+      o.value = c.id;
+      o.textContent = c.name;
+      bossSelect.appendChild(o);
+    });
+
+    bossSelect.value = app.bossChoreId || "";
+  }
+
   function syncParentFields(){
     pointsPerChore.value = app.pointsPerChore;
     autoResetSelect.value = app.autoDailyReset;
@@ -1832,26 +1590,16 @@
 
     mysteryPromptInput.value = app.mysteryPrompt || "";
     mysteryPromptStatus.textContent = app.mysteryPrompt ? `"${app.mysteryPrompt}"` : "None";
-  }
 
-  function renderDefaultChorePicker(){
-    defaultChoreList.innerHTML = "";
-    DEFAULT_CHORE_TEMPLATES.forEach((name, idx) => {
-      const row = document.createElement("label");
-      row.className = "defaultItem";
-      row.innerHTML = `
-        <input type="checkbox" data-name="${escapeAttr(name)}" aria-label="default chore ${idx+1}" />
-        <div class="defaultText">${escapeHtml(name)}</div>
-      `;
-      defaultChoreList.appendChild(row);
-    });
+    const bossName = app.bossChoreId ? (app.state.chores.find(c => c.id === app.bossChoreId)?.name || "") : "";
+    bossStatus.textContent = app.bossChoreId ? `"${bossName}"` : "None";
   }
 
   // ---------------- Fullscreen FX overlay ----------------
   function showFx({emoji, title, sub, confetti, sound}){
     fxEmoji.textContent = emoji || "⭐";
-    fxTitle.textContent = title || "Great Job!";
-    fxSub.textContent = sub || "";
+    fxTitle.textContent = title || "Nice!";
+    fxSub.textContent = (sub || "").toString();
 
     fxConfettiLayer.innerHTML = "";
     if(confetti) fxConfettiBurst(36);
@@ -1861,13 +1609,13 @@
 
     if(app.soundOn && sound) sfx(sound);
 
-    // auto-close after 2.2s (but user can click Continue)
+    // Dialog stays 4 seconds
     setTimeout(() => {
       if(fxOverlay.style.display === "flex"){
         fxOverlay.style.display = "none";
         document.body.style.overflow = "";
       }
-    }, 2200);
+    }, 4000);
   }
 
   function fxConfettiBurst(count){
@@ -1904,12 +1652,17 @@
     });
   }
 
-  // ---------------- Hold-to-claim ----------------
+  // ---------------- Hold-to-claim (anti-scroll misfires) ----------------
   function attachHoldToClaim(buttonEl, onClaim){
     let holdTimer = null;
     let raf = null;
     let start = 0;
+    let startX = 0, startY = 0;
+    let armed = false;
+
     const HOLD_MS = 3000;
+    const ARM_DELAY_MS = 200;     // prevents scroll misfires
+    const MOVE_CANCEL_PX = 10;    // cancel if finger moves (scroll)
 
     const clear = () => {
       if(holdTimer) clearTimeout(holdTimer);
@@ -1917,6 +1670,7 @@
       if(raf) cancelAnimationFrame(raf);
       raf = null;
       buttonEl.style.setProperty("--hold", 0);
+      armed = false;
     };
 
     const tick = () => {
@@ -1928,17 +1682,39 @@
 
     const begin = (e) => {
       if(buttonEl.disabled) return;
-      try{ buttonEl.setPointerCapture(e.pointerId); } catch(_){}
+
+      startX = e.clientX || 0;
+      startY = e.clientY || 0;
+
       clear();
       start = performance.now();
-      if(app.soundOn) sfx("arm");
+
+      // Arm after a short delay
+      setTimeout(() => { armed = true; }, ARM_DELAY_MS);
+
       holdTimer = setTimeout(() => { clear(); onClaim(); }, HOLD_MS);
       raf = requestAnimationFrame(tick);
+
+      try{ buttonEl.setPointerCapture(e.pointerId); } catch(_){}
+      if(app.soundOn) sfx("arm");
     };
 
-    const end = () => clear();
+    const move = (e) => {
+      if(!holdTimer) return;
+      const dx = Math.abs((e.clientX||0) - startX);
+      const dy = Math.abs((e.clientY||0) - startY);
+      if(dx > MOVE_CANCEL_PX || dy > MOVE_CANCEL_PX){
+        clear();
+      }
+    };
+
+    const end = () => {
+      // if user released before arming, just clear
+      clear();
+    };
 
     buttonEl.addEventListener("pointerdown", begin);
+    buttonEl.addEventListener("pointermove", move);
     buttonEl.addEventListener("pointerup", end);
     buttonEl.addEventListener("pointercancel", end);
     buttonEl.addEventListener("pointerleave", end);
@@ -2014,7 +1790,6 @@
       const merged = deepCopy(defaults);
       Object.assign(merged, parsed);
 
-      // Fixed passcode always
       merged.parentPasscode = "123";
 
       merged.pointsPerChore = clampInt(merged.pointsPerChore ?? 10, 1, 100);
@@ -2022,6 +1797,7 @@
       merged.autoDailyReset = merged.autoDailyReset === "off" ? "off" : "on";
       merged.soundOn = !!merged.soundOn;
       merged.mysteryPrompt = (merged.mysteryPrompt || "").toString();
+      merged.bossChoreId = (merged.bossChoreId || "").toString();
 
       if(!merged.state || typeof merged.state !== "object") merged.state = defaultState();
       if(!Array.isArray(merged.state.chores)) merged.state.chores = [];
@@ -2032,19 +1808,25 @@
         statusToday: normalizeStatus(c.statusToday),
         approvedAllTime: clampInt(c.approvedAllTime ?? 0, 0, 999999),
         createdAt: Number(c.createdAt) || Date.now(),
-        locked: !!c.locked,
-        lockKey: (c.lockKey || "").toString(),
-        timerSeconds: clampInt(c.timerSeconds ?? guessTimerSeconds(c.name), 0, 3600),
-        timerEndsAt: Number(c.timerEndsAt) || 0,
-        timerDoneToday: !!c.timerDoneToday
+        pointsAwarded: clampInt(c.pointsAwarded ?? merged.pointsPerChore, 1, 1000)
       }));
 
-      const maxPoints = MAX_STARS * clampInt(merged.pointsPerChore, 1, 100);
+      const maxPoints = MAX_STARS * clampInt(merged.pointsPerChore, 1, 100) * 3;
       merged.state.points = clampInt(merged.state.points ?? 0, 0, maxPoints);
       merged.state.strikes = clampInt(merged.state.strikes ?? 0, 0, STRIKES_MAX);
       merged.state.lastDateKey = (merged.state.lastDateKey || dateKey(new Date())).toString();
       merged.state.lastPerfectDayKey = (merged.state.lastPerfectDayKey || "").toString();
       merged.state.mysteryUsedKey = (merged.state.mysteryUsedKey || "").toString();
+      merged.state.bossUsedKey = (merged.state.bossUsedKey || "").toString();
+
+      if(!merged.meta || typeof merged.meta !== "object") merged.meta = { lastSavedMs: 0 };
+      merged.meta.lastSavedMs = Number(merged.meta.lastSavedMs) || 0;
+
+      // If boss chore no longer exists, clear
+      if(merged.bossChoreId && !merged.state.chores.some(c => c.id === merged.bossChoreId)){
+        merged.bossChoreId = "";
+        merged.state.bossUsedKey = "";
+      }
 
       return merged;
     } catch(e){
@@ -2053,7 +1835,20 @@
   }
 
   function saveApp(){
-    try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(app)); } catch(e){}
+    try{
+      app.meta = app.meta || {};
+      app.meta.lastSavedMs = Date.now();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(app));
+    } catch(e){}
+  }
+
+  function renderLastSaved(){
+    const ms = Number(app.meta?.lastSavedMs) || 0;
+    if(!ms){ lastSavedLine.textContent = "Last saved: —"; return; }
+    const d = new Date(ms);
+    const hh = String(d.getHours()).padStart(2,"0");
+    const mm = String(d.getMinutes()).padStart(2,"0");
+    lastSavedLine.textContent = `Last saved: ${hh}:${mm}`;
   }
 
   function deepCopy(obj){ return JSON.parse(JSON.stringify(obj)); }
@@ -2063,7 +1858,6 @@
   }
 
   function hardenApp(){
-    // Force passcode fixed always
     app.parentPasscode = "123";
 
     if(!app.state || typeof app.state !== "object") app.state = defaultState();
@@ -2075,27 +1869,32 @@
       statusToday: normalizeStatus(c.statusToday),
       approvedAllTime: clampInt(c.approvedAllTime ?? 0, 0, 999999),
       createdAt: Number(c.createdAt) || Date.now(),
-      locked: !!c.locked,
-      lockKey: (c.lockKey || "").toString(),
-      timerSeconds: clampInt(c.timerSeconds ?? guessTimerSeconds(c.name), 0, 3600),
-      timerEndsAt: Number(c.timerEndsAt) || 0,
-      timerDoneToday: !!c.timerDoneToday
+      pointsAwarded: clampInt(c.pointsAwarded ?? app.pointsPerChore ?? 10, 1, 1000)
     }));
-
-    ensureLockedTopExists();
 
     app.pointsPerChore = clampInt(app.pointsPerChore ?? 10, 1, 100);
     app.dailyGoalStars = clampInt(app.dailyGoalStars ?? 8, 1, MAX_STARS);
     app.autoDailyReset = app.autoDailyReset === "off" ? "off" : "on";
     app.soundOn = !!app.soundOn;
     app.mysteryPrompt = (app.mysteryPrompt || "").toString();
+    app.bossChoreId = (app.bossChoreId || "").toString();
 
-    const maxPoints = MAX_STARS * clampInt(app.pointsPerChore, 1, 100);
+    const maxPoints = MAX_STARS * clampInt(app.pointsPerChore, 1, 100) * 3;
     app.state.points = clampInt(app.state.points ?? 0, 0, maxPoints);
     app.state.strikes = clampInt(app.state.strikes ?? 0, 0, STRIKES_MAX);
     app.state.lastDateKey = (app.state.lastDateKey || dateKey(new Date())).toString();
     app.state.lastPerfectDayKey = (app.state.lastPerfectDayKey || "").toString();
     app.state.mysteryUsedKey = (app.state.mysteryUsedKey || "").toString();
+    app.state.bossUsedKey = (app.state.bossUsedKey || "").toString();
+
+    app.meta = app.meta || { lastSavedMs: 0 };
+    app.meta.lastSavedMs = Number(app.meta.lastSavedMs) || 0;
+
+    // Clear boss if deleted
+    if(app.bossChoreId && !app.state.chores.some(c => c.id === app.bossChoreId)){
+      app.bossChoreId = "";
+      app.state.bossUsedKey = "";
+    }
 
     saveApp();
   }
@@ -2140,7 +1939,8 @@
     t.className = "toast";
     t.textContent = msg;
     document.body.appendChild(t);
-    setTimeout(() => t.remove(), 1200);
+    // keep for 4 seconds (align with dialog timing)
+    setTimeout(() => t.remove(), 4000);
   }
 
   function norm(s){
