@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kids Chore Chart</title>
+
+  <style>
+    :root{
+      --ink:#18223a;
+      --muted:#5b6784;
+
+      --card: rgba(255,255,255,.92);
+      --glassBorder: rgba(255,255,255,.60);
+
+      --blue:#3b82f6;
+      --purple:#7c3aed;
+      --green:#10b981;
+      --red:#ef4444;
+      --yellow:#f59e0b;
+      --pink:#ec4899;
+
+      --shadow: 0 16px 36px rgba(0,0,0,.16);
+      --shadow2: 0 10px 22px rgba(0,0,0,.12);
+      --radius: 26px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color:var(--ink);
+      min-height:100vh;
+      background:
+        radial-gradient(1200px 700px at 15% 20%, rgba(124,58,237,.20), transparent 55%),
+        radial-gradient(1000px 700px at 85% 30%, rgba(59,130,246,.18), transparent 55%),
+        radial-gradient(900px 700px at 50% 90%, rgba(236,72,153,.14), transparent 55%),
+        linear-gradient(135deg, #ffecd2, #fcb69f);
+    }
+
+    .wrap{max-width:1100px; margin:0 auto; padding:18px 14px 44px;}
+    .header{
+      display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:12px;
+      margin: 8px 0 12px;
+    }
+    h1{
+      margin:0;
+      font-size:2.25rem;
+      letter-spacing:.2px;
+      line-height:1.1;
+    }
+    .subtitle{
+      margin:0;
+      color:var(--muted);
+      font-weight:750;
+      font-size:1.05rem;
+    }
+
+    .tabs{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin:14px 0 16px;}
+    .tabBtn{
+      border:none; cursor:pointer;
+      padding:14px 18px;
+      border-radius:999px;
+      font-size:1.15rem;
+      font-weight:950;
+      box-shadow: var(--shadow2);
+      transition: transform .08s ease, filter .12s ease;
+      user-select:none;
+    }
+    .tabBtn:active{transform: scale(.97)}
+    .kidTab{background: linear-gradient(135deg,#60a5fa,#7c3aed); color:#fff;}
+    .parentTab{background: linear-gradient(135deg,#fde68a,#f59e0b); color:#1c243a;}
+    .tabActive{filter: saturate(1.15) contrast(1.05); outline: 3px solid rgba(255,255,255,.55);}
+
+    .grid{display:grid; grid-template-columns: 1.15fr .85fr; gap:14px;}
+    @media (max-width: 920px){ .grid{grid-template-columns: 1fr;} }
+
+    .card{
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 16px 14px;
+      border: 2px solid var(--glassBorder);
+      position: relative;
+      overflow:hidden;
+    }
+
+    /* BIG STAR COUNT */
+    .starHero{
+      display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:12px;
+      margin-bottom: 10px;
+    }
+    .starCountBig{
+      display:flex; align-items:flex-end; gap:12px;
+    }
+    .starEmojiBig{
+      font-size: 3.4rem;
+      line-height:1;
+      filter: drop-shadow(0 14px 16px rgba(0,0,0,.14));
+    }
+    .starNumberBig{
+      font-size: 6.2rem;
+      font-weight: 1000;
+      letter-spacing: -1px;
+      line-height: .92;
+      text-shadow: 0 2px 0 rgba(0,0,0,.05);
+    }
+    .starOutOf{
+      font-size: 1.25rem;
+      font-weight: 950;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .miniBadges{display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:flex-end;}
+    .badge{
+      display:flex; align-items:center; gap:10px;
+      padding:10px 12px;
+      border-radius: 18px;
+      font-weight:950;
+      box-shadow: var(--shadow2);
+      border: 2px solid rgba(0,0,0,.05);
+      user-select:none;
+      background: rgba(255,255,255,.86);
+    }
+    .badge .big{font-size:1.35rem; line-height:1;}
+    .badge .small{font-size:.98rem; color:var(--muted); font-weight:900; line-height:1.1;}
+    .badgeStrike{
+      background: linear-gradient(135deg, rgba(239,68,68,.16), rgba(255,255,255,.86));
+      border-color: rgba(239,68,68,.20);
+    }
+
+    .goalLine{
+      margin: 6px 0 0;
+      text-align:center;
+      color:var(--muted);
+      font-weight:950;
+      font-size:1.05rem;
+    }
+    .goalPill{
+      display:inline-block;
+      margin-left:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(59,130,246,.10);
+      border: 2px solid rgba(59,130,246,.14);
+      color:#1c243a;
+    }
+    .statusLine{
+      margin: 10px 0 0;
+      text-align:center;
+      font-weight:950;
+      color: var(--muted);
+    }
+
+    /* Stars row */
+    .starsRow{
+      display:flex;
+      gap:8px;
+      justify-content:center;
+      flex-wrap:wrap;
+      padding: 8px 10px 2px;
+      margin-top: 2px;
+      user-select:none;
+      font-size:2.55rem;
+    }
+    .starDim{filter: grayscale(1) opacity(.22); transform: scale(.92);}
+
+    /* Chores */
+    .sectionTitle{
+      font-size:1.45rem;
+      font-weight:1000;
+      margin:0 0 8px;
+    }
+    .smallNote{
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-weight:900;
+      font-size:1.02rem;
+    }
+    ul{list-style:none; padding:0; margin:0;}
+
+    .choreItem{
+      border-radius: 20px;
+      padding: 12px;
+      margin: 10px 0;
+      background: linear-gradient(135deg, rgba(124,58,237,.08), rgba(255,255,255,.92));
+      border: 2px solid rgba(124,58,237,.12);
+      box-shadow: 0 10px 18px rgba(0,0,0,.08);
+    }
+    .choreTop{
+      display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    .choreName{
+      font-size:1.28rem;
+      font-weight:1000;
+      letter-spacing:.1px;
+    }
+    .choreMeta{
+      font-size:1.02rem;
+      font-weight:900;
+      color: var(--muted);
+    }
+
+    .btnRow{display:flex; gap:10px; flex-wrap:wrap}
+    .btn{
+      border:none;
+      cursor:pointer;
+      border-radius: 18px;
+      font-size:1.12rem;
+      font-weight:1000;
+      padding: 14px 16px;
+      box-shadow: var(--shadow2);
+      transition: transform .08s ease, filter .12s ease, opacity .12s ease;
+      user-select:none;
+    }
+    .btn:active{transform: scale(.97)}
+    .btn:disabled{
+      cursor:not-allowed;
+      opacity:.90;
+      filter:saturate(.85);
+    }
+
+    /* Status button colors */
+    .btnRed{background: linear-gradient(135deg, #ff6b6b, #ef4444); color:#fff;}
+    .btnYellow{background: linear-gradient(135deg, #fde68a, #f59e0b); color:#1c243a;}
+    .btnGreen{background: linear-gradient(135deg, #34d399, #10b981); color:#fff;}
+    .btnStrike{background: linear-gradient(135deg, #fb7185, #ef4444); color:#fff;}
+    .btnBlue{background: linear-gradient(135deg, #60a5fa, #3b82f6); color:#fff;}
+    .btnPurple{background: linear-gradient(135deg, #a78bfa, #7c3aed); color:#fff;}
+    .btnGray{background:#eef2f7; color:#1c243a;}
+
+    /* FX: Balloon pop on strike */
+    .fxLayer{position:absolute; inset:0; pointer-events:none; display:flex; align-items:center; justify-content:center;}
+    .balloon{
+      font-size: 6.5rem;
+      opacity:0;
+      transform: translateY(10px) scale(.6);
+      filter: drop-shadow(0 16px 18px rgba(0,0,0,.18));
+    }
+    @keyframes balloonBoom {
+      0%   {opacity:0; transform: translateY(14px) scale(.5);}
+      15%  {opacity:1; transform: translateY(10px) scale(1.0);}
+      45%  {opacity:1; transform: translateY(0px)  scale(3.0);}
+      70%  {opacity:1; transform: translateY(-2px) scale(3.4) rotate(10deg);}
+      100% {opacity:0; transform: translateY(-6px) scale(.12) rotate(-12deg);}
+    }
+    .balloonBoom{ animation: balloonBoom 520ms ease-in-out forwards; }
+
+    /* FX: Big star celebrate on star earned */
+    .starFx{
+      position:absolute;
+      left:50%;
+      top:44%;
+      transform: translate(-50%,-50%) scale(.4);
+      opacity:0;
+      font-size: 7rem;
+      filter: drop-shadow(0 18px 18px rgba(0,0,0,.18));
+      pointer-events:none;
+    }
+    @keyframes starMegaPop {
+      0%   {opacity:0; transform: translate(-50%,-50%) scale(.35) rotate(-8deg);}
+      15%  {opacity:1; transform: translate(-50%,-50%) scale(.9) rotate(6deg);}
+      45%  {opacity:1; transform: translate(-50%,-50%) scale(2.2) rotate(-6deg);}
+      78%  {opacity:1; transform: translate(-50%,-50%) scale(1.2) rotate(2deg);}
+      100% {opacity:0; transform: translate(-50%,-50%) scale(.95) rotate(0deg);}
+    }
+    .starMegaPop{ animation: starMegaPop 720ms cubic-bezier(.2,.9,.2,1.1) forwards; }
+
+    /* Spark burst */
+    .burst{
+      position:absolute;
+      width: 10px; height: 10px;
+      left:50%; top: 46%;
+      transform: translate(-50%,-50%);
+      pointer-events:none;
+    }
+    .spark{
+      position:absolute; width:10px; height:10px; border-radius:50%;
+      opacity:0;
+      animation: spark 650ms ease-out forwards;
+      box-shadow: 0 8px 14px rgba(0,0,0,.12);
+    }
+    @keyframes spark {
+      0% {transform: translate(0,0) scale(.9); opacity:1;}
+      100%{transform: translate(var(--dx), var(--dy)) scale(0); opacity:0;}
+    }
+
+    /* Parent page */
+    .hidden{display:none !important;}
+    input, select{
+      font-size:1.08rem;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 2px solid rgba(0,0,0,.10);
+      outline:none;
+      font-weight:800;
+      background: rgba(255,255,255,.92);
+    }
+    input:focus{border-color: rgba(59,130,246,.45)}
+    .formRow{display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-top:10px;}
+    .inputWide{min-width: 260px; flex:1}
+    .inputSmall{width: 140px}
+    .divider{height:2px; background:rgba(0,0,0,.08); margin:14px 0}
+    .warnPill{
+      display:inline-block;
+      font-weight:1000;
+      padding:6px 10px;
+      border-radius:999px;
+      background: rgba(239,68,68,.10);
+      border:2px solid rgba(239,68,68,.18);
+      color:#b91c1c;
+    }
+    .chip{
+      display:inline-block;
+      padding:7px 10px;
+      border-radius:999px;
+      font-weight:1000;
+      border:2px solid rgba(0,0,0,.06);
+      box-shadow: var(--shadow2);
+      background: rgba(255,255,255,.88);
+      margin: 0 6px 6px 0;
+    }
+    .chipRed{background: rgba(239,68,68,.10); border-color: rgba(239,68,68,.18);}
+    .chipYellow{background: rgba(245,158,11,.14); border-color: rgba(245,158,11,.22);}
+    .chipGreen{background: rgba(16,185,129,.12); border-color: rgba(16,185,129,.20);}
+
+    /* Toast */
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform: translateX(-50%);
+      background: rgba(24,34,58,.92);
+      color:#fff;
+      font-weight:1000;
+      padding: 10px 14px;
+      border-radius: 999px;
+      box-shadow: 0 14px 34px rgba(0,0,0,.22);
+      z-index:9999;
+      user-select:none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="header">
+      <div>
+        <h1>Kids Chore Chart</h1>
+        <p class="subtitle">Tap a chore to claim it (⭐ earned). Parent approves or declines.</p>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tabBtn kidTab tabActive" id="kidTabBtn" type="button">Kid Page</button>
+      <button class="tabBtn parentTab" id="parentTabBtn" type="button">Parent Page (Locked)</button>
+    </div>
+
+    <!-- KID PAGE -->
+    <div id="kidPage" class="grid">
+      <div class="card" id="kidScoreCard">
+        <div class="fxLayer">
+          <div id="balloonFx" class="balloon">🎈</div>
+        </div>
+        <div id="starFx" class="starFx">⭐</div>
+
+        <div class="starHero">
+          <div class="starCountBig">
+            <div class="starEmojiBig">⭐</div>
+            <div class="starNumberBig"><span id="starsBigKid">0</span></div>
+            <div class="starOutOf">/10</div>
+          </div>
+
+          <div class="miniBadges">
+            <div class="badge badgeStrike">
+              <div class="big">❌</div>
+              <div>
+                <div><span style="font-size:1.25rem; font-weight:1000;">Strikes:</span> <span id="strikesKid" style="font-size:1.35rem; font-weight:1000;">0</span><span style="color:var(--muted)">/3</span></div>
+                <div class="small">3 strikes = lose 1 ⭐</div>
+              </div>
+            </div>
+
+            <button class="btn btnStrike" id="addStrikeBtn" type="button">❌ Add Strike</button>
+          </div>
+        </div>
+
+        <div class="starsRow" id="starsRowKid"></div>
+
+        <div class="goalLine">
+          Daily goal <span class="goalPill" id="goalKidPill">8 ⭐</span>
+          Perfect <span class="goalPill">10 ⭐</span>
+        </div>
+
+        <div class="statusLine" id="goalStatusKid"></div>
+      </div>
+
+      <div class="card">
+        <div class="sectionTitle">Chores</div>
+        <div class="smallNote">
+          Red = not complete. Yellow = claimed (waiting for parent). Green = approved.
+        </div>
+        <ul id="kidChoreList"></ul>
+      </div>
+    </div>
+
+    <!-- PARENT PAGE -->
+    <div id="parentPage" class="hidden">
+      <div class="card">
+        <div class="sectionTitle">🔒 Parent Page</div>
+        <div class="smallNote">Unlock required. Default passcode: <span class="warnPill">bpasscode</span></div>
+
+        <div class="formRow">
+          <input id="parentPassInput" class="inputWide" type="password" placeholder="Enter parent passcode" />
+          <button class="btn btnYellow" id="unlockBtn" type="button">Unlock</button>
+          <button class="btn btnGray" id="lockBtn" type="button">Lock</button>
+        </div>
+
+        <div id="parentLockedNote" class="smallNote" style="text-align:center; margin-top:10px;">Locked.</div>
+      </div>
+
+      <div id="parentControls" class="hidden">
+        <div class="grid">
+          <div class="card" id="parentSummaryCard">
+            <div class="sectionTitle">Today Summary</div>
+
+            <div class="starHero" style="margin-bottom:6px;">
+              <div class="starCountBig">
+                <div class="starEmojiBig">⭐</div>
+                <div class="starNumberBig"><span id="starsBigParent">0</span></div>
+                <div class="starOutOf">/10</div>
+              </div>
+
+              <div class="miniBadges">
+                <div class="badge badgeStrike">
+                  <div class="big">❌</div>
+                  <div>
+                    <div><span style="font-size:1.25rem; font-weight:1000;">Strikes:</span> <span id="strikesParent" style="font-size:1.35rem; font-weight:1000;">0</span><span style="color:var(--muted)">/3</span></div>
+                    <div class="small">Undo/clear is parent-only</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:8px;">
+              <span class="chip chipRed">Red: <span id="countPending">0</span></span>
+              <span class="chip chipYellow">Yellow: <span id="countClaimed">0</span></span>
+              <span class="chip chipGreen">Green: <span id="countApproved">0</span></span>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="sectionTitle">Review Claimed Chores</div>
+            <div class="smallNote">Approve turns green. Decline resets to red and removes the earned points/star.</div>
+            <ul id="parentReviewList"></ul>
+
+            <div class="divider"></div>
+
+            <div class="sectionTitle">Manage Strikes</div>
+            <div class="btnRow">
+              <button class="btn btnGray" id="undoStrikeBtn" type="button">↩️ Undo Strike</button>
+              <button class="btn btnGray" id="clearStrikesBtn" type="button">Clear Strikes</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="sectionTitle">Chores & Settings</div>
+
+            <div class="sectionTitle" style="font-size:1.18rem; margin-top:2px;">Add Chore</div>
+            <div class="formRow" style="justify-content:flex-start">
+              <input id="newChoreName" class="inputWide" type="text" placeholder="New chore name (e.g., Make bed)" />
+              <button class="btn btnPurple" id="addChoreBtn" type="button">➕ Add</button>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="sectionTitle">Edit / Delete / Reset</div>
+            <div class="smallNote">Reset “today status” sends the chore back to red.</div>
+            <ul id="parentChoreList"></ul>
+
+            <div class="divider"></div>
+
+            <div class="sectionTitle">Chart Settings</div>
+            <div class="formRow" style="justify-content:flex-start">
+              <label style="font-weight:1000; color:var(--muted); align-self:center;">Points per chore</label>
+              <input id="pointsPerChore" class="inputSmall" type="number" min="1" step="1" />
+              <button class="btn btnBlue" id="saveSettingsBtn" type="button">Save</button>
+            </div>
+
+            <div class="formRow" style="justify-content:flex-start; margin-top:6px;">
+              <label style="font-weight:1000; color:var(--muted); align-self:center;">Auto daily reset</label>
+              <select id="autoResetSelect">
+                <option value="on">On</option>
+                <option value="off">Off</option>
+              </select>
+              <label style="font-weight:1000; color:var(--muted); align-self:center;">Daily goal stars</label>
+              <input id="dailyGoalStars" class="inputSmall" type="number" min="1" max="10" step="1" />
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="sectionTitle">Change Parent Passcode</div>
+            <div class="formRow" style="justify-content:flex-start">
+              <input id="newParentPass" class="inputWide" type="password" placeholder="New parent passcode" />
+              <button class="btn btnYellow" id="changePassBtn" type="button">Update</button>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="sectionTitle">Reset Everything</div>
+            <div class="smallNote">Reset requires code <span class="warnPill">123</span>.</div>
+            <div class="formRow" style="justify-content:flex-start">
+              <input id="resetCodeInput" class="inputWide" type="password" placeholder="Enter reset code (123)" />
+              <button class="btn btnStrike" id="resetBtn" type="button">🔄 Reset</button>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="sectionTitle">Save</div>
+            <button class="btn btnBlue" id="manualSaveBtn" type="button">💾 Save Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+(() => {
+  const STORAGE_KEY = "kids_chore_chart_apps_script_v1";
+
+  // Status model per chore, per day:
+  // - "pending"  (red)
+  // - "claimed"  (yellow) => kid claims, points awarded immediately
+  // - "approved" (green)  => parent approves
+  //
+  // If parent declines a "claimed" chore: status -> pending and points are removed.
+  //
+  // Points are capped 0..100 (10 stars max).
+  // Strikes: 0..2; on 3rd strike => balloon pop, -10 points if possible, strikes reset to 0.
+  const defaults = {
+    chores: [
+      { id: rid(), name: "Make bed", statusToday: "pending", approvedAllTime: 0 },
+      { id: rid(), name: "Brush teeth", statusToday: "pending", approvedAllTime: 0 },
+      { id: rid(), name: "Pick up toys", statusToday: "pending", approvedAllTime: 0 }
+    ],
+    points: 0,
+    strikes: 0,
+    pointsPerChore: 10,     // kid earns this on claim; removed if parent declines
+    dailyGoalStars: 8,
+    autoDailyReset: "on",
+    parentPasscode: "bpasscode",
+    lastDateKey: dateKey(new Date())
+  };
+
+  let state = loadState();
+  let unlocked = false;
+
+  // --- Elements (kid)
+  const kidTabBtn = document.getElementById("kidTabBtn");
+  const parentTabBtn = document.getElementById("parentTabBtn");
+  const kidPage = document.getElementById("kidPage");
+  const parentPage = document.getElementById("parentPage");
+
+  const starsBigKid = document.getElementById("starsBigKid");
+  const strikesKid = document.getElementById("strikesKid");
+  const starsRowKid = document.getElementById("starsRowKid");
+  const goalStatusKid = document.getElementById("goalStatusKid");
+  const goalKidPill = document.getElementById("goalKidPill");
+
+  const kidChoreList = document.getElementById("kidChoreList");
+  const addStrikeBtn = document.getElementById("addStrikeBtn");
+
+  const balloonFx = document.getElementById("balloonFx");
+  const starFx = document.getElementById("starFx");
+  const kidScoreCard = document.getElementById("kidScoreCard");
+
+  // --- Elements (parent)
+  const parentPassInput = document.getElementById("parentPassInput");
+  const unlockBtn = document.getElementById("unlockBtn");
+  const lockBtn = document.getElementById("lockBtn");
+  const parentLockedNote = document.getElementById("parentLockedNote");
+  const parentControls = document.getElementById("parentControls");
+
+  const starsBigParent = document.getElementById("starsBigParent");
+  const strikesParent = document.getElementById("strikesParent");
+  const countPending = document.getElementById("countPending");
+  const countClaimed = document.getElementById("countClaimed");
+  const countApproved = document.getElementById("countApproved");
+
+  const parentReviewList = document.getElementById("parentReviewList");
+
+  const newChoreName = document.getElementById("newChoreName");
+  const addChoreBtn = document.getElementById("addChoreBtn");
+  const parentChoreList = document.getElementById("parentChoreList");
+
+  const undoStrikeBtn = document.getElementById("undoStrikeBtn");
+  const clearStrikesBtn = document.getElementById("clearStrikesBtn");
+
+  const pointsPerChore = document.getElementById("pointsPerChore");
+  const autoResetSelect = document.getElementById("autoResetSelect");
+  const dailyGoalStars = document.getElementById("dailyGoalStars");
+  const saveSettingsBtn = document.getElementById("saveSettingsBtn");
+
+  const newParentPass = document.getElementById("newParentPass");
+  const changePassBtn = document.getElementById("changePassBtn");
+
+  const resetCodeInput = document.getElementById("resetCodeInput");
+  const resetBtn = document.getElementById("resetBtn");
+
+  const manualSaveBtn = document.getElementById("manualSaveBtn");
+
+  // Daily reset check
+  maybeDailyReset();
+
+  // --- Tabs
+  kidTabBtn.addEventListener("click", () => showTab("kid"));
+  parentTabBtn.addEventListener("click", () => showTab("parent"));
+  function showTab(which){
+    if(which === "kid"){
+      kidPage.classList.remove("hidden");
+      parentPage.classList.add("hidden");
+      kidTabBtn.classList.add("tabActive");
+      parentTabBtn.classList.remove("tabActive");
+    } else {
+      kidPage.classList.add("hidden");
+      parentPage.classList.remove("hidden");
+      parentTabBtn.classList.add("tabActive");
+      kidTabBtn.classList.remove("tabActive");
+      parentPassInput.value = "";
+    }
+  }
+
+  // --- Kid actions
+  addStrikeBtn.addEventListener("click", () => addStrike());
+
+  // --- Parent unlock/lock
+  unlockBtn.addEventListener("click", () => {
+    if(parentPassInput.value === state.parentPasscode){
+      unlocked = true;
+      parentControls.classList.remove("hidden");
+      parentLockedNote.textContent = "Unlocked.";
+      syncParentFields();
+      renderAll();
+      toast("Unlocked");
+    } else {
+      unlocked = false;
+      parentControls.classList.add("hidden");
+      parentLockedNote.textContent = "Wrong passcode.";
+      toast("Wrong passcode");
+    }
+  });
+
+  lockBtn.addEventListener("click", () => {
+    unlocked = false;
+    parentControls.classList.add("hidden");
+    parentLockedNote.textContent = "Locked.";
+    parentPassInput.value = "";
+    toast("Locked");
+  });
+
+  // --- Parent: manage chores
+  addChoreBtn.addEventListener("click", () => {
+    if(!unlocked) return;
+    const name = (newChoreName.value || "").trim();
+    if(!name) return;
+    state.chores.push({ id: rid(), name, statusToday: "pending", approvedAllTime: 0 });
+    newChoreName.value = "";
+    saveState();
+    renderAll();
+    toast("Chore added");
+  });
+
+  // --- Parent: strikes
+  undoStrikeBtn.addEventListener("click", () => {
+    if(!unlocked) return;
+    state.strikes = clampInt(state.strikes - 1, 0, 2);
+    saveState();
+    renderAll();
+    toast("Strike undone");
+  });
+  clearStrikesBtn.addEventListener("click", () => {
+    if(!unlocked) return;
+    state.strikes = 0;
+    saveState();
+    renderAll();
+    toast("Strikes cleared");
+  });
+
+  // --- Parent: settings
+  saveSettingsBtn.addEventListener("click", () => {
+    if(!unlocked) return;
+    state.pointsPerChore = clampInt(pointsPerChore.value, 1, 100);
+    state.autoDailyReset = autoResetSelect.value === "off" ? "off" : "on";
+    state.dailyGoalStars = clampInt(dailyGoalStars.value, 1, 10);
+    saveState();
+    renderAll();
+    toast("Saved settings");
+  });
+
+  // --- Parent: passcode
+  changePassBtn.addEventListener("click", () => {
+    if(!unlocked) return;
+    const np = (newParentPass.value || "").trim();
+    if(!np) return toast("Enter a passcode");
+    state.parentPasscode = np;
+    newParentPass.value = "";
+    saveState();
+    toast("Passcode updated");
+  });
+
+  // --- Parent: reset
+  resetBtn.addEventListener("click", () => {
+    if(!unlocked) return;
+    const code = resetCodeInput.value;
+    if(code !== "123"){
+      toast("Wrong reset code");
+      return;
+    }
+    state = deepCopy(defaults);
+    state.chores = [];
+    state.lastDateKey = dateKey(new Date());
+    unlocked = false;
+    parentControls.classList.add("hidden");
+    parentLockedNote.textContent = "Locked.";
+    resetCodeInput.value = "";
+    saveState();
+    renderAll();
+    toast("Reset complete");
+  });
+
+  manualSaveBtn.addEventListener("click", () => {
+    if(!unlocked) return;
+    saveState();
+    toast("Saved");
+  });
+
+  // Initial render
+  renderAll();
+
+  // ---------------- Core logic ----------------
+  function claimChore(choreId){
+    const c = state.chores.find(x => x.id === choreId);
+    if(!c) return;
+
+    if(c.statusToday !== "pending") return; // only once
+    c.statusToday = "claimed";
+
+    const beforeStars = starsFromPoints(state.points);
+    addPoints(state.pointsPerChore);
+    const afterStars = starsFromPoints(state.points);
+
+    saveState();
+    renderAll();
+
+    if(afterStars > beforeStars){
+      megaStarCelebrate();
+      toast("Star earned!");
+    } else {
+      toast("Claimed!");
+    }
+  }
+
+  function approveChore(choreId){
+    if(!unlocked) return;
+    const c = state.chores.find(x => x.id === choreId);
+    if(!c) return;
+
+    if(c.statusToday !== "claimed") return;
+    c.statusToday = "approved";
+    c.approvedAllTime += 1;
+
+    saveState();
+    renderAll();
+    toast("Approved ✅");
+  }
+
+  function declineChore(choreId){
+    if(!unlocked) return;
+    const c = state.chores.find(x => x.id === choreId);
+    if(!c) return;
+
+    if(c.statusToday !== "claimed") return;
+
+    const beforeStars = starsFromPoints(state.points);
+    addPoints(-state.pointsPerChore);
+    const afterStars = starsFromPoints(state.points);
+
+    c.statusToday = "pending";
+
+    saveState();
+    renderAll();
+
+    if(afterStars < beforeStars){
+      burstAt(kidScoreCard);
+      toast("Declined: star removed");
+    } else {
+      toast("Declined");
+    }
+  }
+
+  function resetTodayStatus(choreId){
+    if(!unlocked) return;
+    const c = state.chores.find(x => x.id === choreId);
+    if(!c) return;
+
+    if(c.statusToday === "claimed"){
+      addPoints(-state.pointsPerChore);
+    }
+    c.statusToday = "pending";
+    saveState();
+    renderAll();
+    toast("Reset to red");
+  }
+
+  function addPoints(delta){
+    state.points = clampInt(state.points + delta, 0, 100);
+  }
+
+  function starsFromPoints(points){
+    return clampInt(Math.floor(points / 10), 0, 10);
+  }
+
+  function addStrike(){
+    // BIG balloon pop every strike
+    balloonPopHuge();
+
+    state.strikes = clampInt(state.strikes + 1, 0, 3);
+
+    if(state.strikes >= 3){
+      state.strikes = 0;
+      const beforeStars = starsFromPoints(state.points);
+      if(beforeStars > 0){
+        addPoints(-10);
+        burstAt(kidScoreCard);
+        toast("3 strikes! 1 star lost.");
+      } else {
+        toast("3 strikes!");
+      }
+    } else {
+      toast("Strike added");
+    }
+
+    saveState();
+    renderAll();
+  }
+
+  function maybeDailyReset(){
+    if(state.autoDailyReset !== "on") return;
+
+    const today = dateKey(new Date());
+    if(state.lastDateKey !== today){
+      state.points = 0;
+      state.strikes = 0;
+      state.chores.forEach(c => c.statusToday = "pending");
+      state.lastDateKey = today;
+      saveState();
+    }
+  }
+
+  // ---------------- UI rendering ----------------
+  function renderAll(){
+    const stars = starsFromPoints(state.points);
+
+    // Kid: stars + strikes + goal pill
+    starsBigKid.textContent = stars;
+    strikesKid.textContent = state.strikes;
+    goalKidPill.textContent = `${state.dailyGoalStars} ⭐`;
+
+    // Kid: stars row
+    starsRowKid.innerHTML = "";
+    for(let i=1;i<=10;i++){
+      const s = document.createElement("span");
+      s.textContent = "⭐";
+      if(i > stars) s.classList.add("starDim");
+      starsRowKid.appendChild(s);
+    }
+
+    // Kid: status line
+    const goal = clampInt(state.dailyGoalStars, 1, 10);
+    goalStatusKid.textContent =
+      (stars >= 10) ? "Perfect day: 10 stars!"
+      : (stars >= goal) ? `Goal reached: ${stars} stars (goal is ${goal}).`
+      : `You have ${stars} stars. Goal is ${goal}.`;
+
+    // Kid: chores list
+    kidChoreList.innerHTML = "";
+    state.chores.forEach(c => {
+      const li = document.createElement("li");
+      li.className = "choreItem";
+
+      const meta =
+        c.statusToday === "pending"  ? "Status: Not complete"
+        : c.statusToday === "claimed" ? "Status: Waiting for parent"
+        : "Status: Approved";
+
+      const btnClass =
+        c.statusToday === "pending" ? "btnRed"
+        : c.statusToday === "claimed" ? "btnYellow"
+        : "btnGreen";
+
+      const btnText =
+        c.statusToday === "pending" ? "Not complete"
+        : c.statusToday === "claimed" ? "✅ Claimed (waiting)"
+        : "✅ Approved";
+
+      const disabled = (c.statusToday !== "pending") ? "disabled" : "";
+
+      li.innerHTML = `
+        <div class="choreTop">
+          <div class="choreName">${escapeHtml(c.name)}</div>
+          <div class="choreMeta">${meta}</div>
+        </div>
+        <div class="btnRow">
+          <button class="btn ${btnClass}" type="button" ${disabled}>
+            ${btnText}
+          </button>
+        </div>
+      `;
+
+      li.querySelector("button").addEventListener("click", () => claimChore(c.id));
+      kidChoreList.appendChild(li);
+    });
+
+    // Parent summary (if unlocked)
+    if(unlocked){
+      renderParentSummary();
+      renderParentReview();
+      renderParentChores();
+    }
+  }
+
+  function renderParentSummary(){
+    const stars = starsFromPoints(state.points);
+    starsBigParent.textContent = stars;
+    strikesParent.textContent = state.strikes;
+
+    let pending=0, claimed=0, approved=0;
+    state.chores.forEach(c => {
+      if(c.statusToday === "pending") pending++;
+      else if(c.statusToday === "claimed") claimed++;
+      else approved++;
+    });
+
+    countPending.textContent = pending;
+    countClaimed.textContent = claimed;
+    countApproved.textContent = approved;
+  }
+
+  function renderParentReview(){
+    parentReviewList.innerHTML = "";
+
+    const claimedChores = state.chores.filter(c => c.statusToday === "claimed");
+    if(claimedChores.length === 0){
+      const li = document.createElement("li");
+      li.className = "choreItem";
+      li.innerHTML = `<div class="choreName">No claimed chores waiting right now.</div>`;
+      parentReviewList.appendChild(li);
+      return;
+    }
+
+    claimedChores.forEach(c => {
+      const li = document.createElement("li");
+      li.className = "choreItem";
+      li.innerHTML = `
+        <div class="choreTop">
+          <div class="choreName">${escapeHtml(c.name)}</div>
+          <div class="choreMeta">Claimed: waiting for review</div>
+        </div>
+        <div class="btnRow">
+          <button class="btn btnGreen" type="button">✅ Approve</button>
+          <button class="btn btnRed" type="button">❌ Decline</button>
+        </div>
+      `;
+      const [approveBtn, declineBtn] = li.querySelectorAll("button");
+      approveBtn.addEventListener("click", () => approveChore(c.id));
+      declineBtn.addEventListener("click", () => declineChore(c.id));
+      parentReviewList.appendChild(li);
+    });
+  }
+
+  function renderParentChores(){
+    parentChoreList.innerHTML = "";
+
+    state.chores.forEach(c => {
+      const li = document.createElement("li");
+      li.className = "choreItem";
+
+      const statusChip =
+        c.statusToday === "pending" ? `<span class="chip chipRed">Red</span>`
+        : c.statusToday === "claimed" ? `<span class="chip chipYellow">Yellow</span>`
+        : `<span class="chip chipGreen">Green</span>`;
+
+      li.innerHTML = `
+        <div class="choreTop">
+          <div style="flex:1; min-width:240px;">
+            <div class="smallNote" style="margin:0 0 6px;">Name</div>
+            <input class="inputWide" data-id="${c.id}" type="text" value="${escapeAttr(c.name)}" />
+            <div style="margin-top:8px;">${statusChip}</div>
+          </div>
+          <div class="choreMeta">Approved all-time: ${c.approvedAllTime}</div>
+        </div>
+
+        <div class="btnRow">
+          <button class="btn btnBlue" type="button">💾 Save Name</button>
+          <button class="btn btnGray" type="button">↩️ Reset Today Status</button>
+          <button class="btn btnStrike" type="button">🗑 Delete</button>
+        </div>
+      `;
+
+      const input = li.querySelector("input");
+      const [saveBtn, resetBtn2, delBtn] = li.querySelectorAll("button");
+
+      saveBtn.addEventListener("click", () => {
+        const newName = (input.value || "").trim();
+        if(!newName) return toast("Enter a name");
+        c.name = newName;
+        saveState();
+        renderAll();
+        toast("Saved");
+      });
+
+      resetBtn2.addEventListener("click", () => resetTodayStatus(c.id));
+
+      delBtn.addEventListener("click", () => {
+        if(c.statusToday === "claimed"){
+          addPoints(-state.pointsPerChore);
+        }
+        state.chores = state.chores.filter(x => x.id !== c.id);
+        saveState();
+        renderAll();
+        toast("Deleted");
+      });
+
+      parentChoreList.appendChild(li);
+    });
+  }
+
+  function syncParentFields(){
+    pointsPerChore.value = state.pointsPerChore;
+    autoResetSelect.value = state.autoDailyReset;
+    dailyGoalStars.value = state.dailyGoalStars;
+  }
+
+  // ---------------- FX ----------------
+  function balloonPopHuge(){
+    balloonFx.classList.remove("balloonBoom");
+    void balloonFx.offsetWidth;
+    balloonFx.classList.add("balloonBoom");
+  }
+
+  function megaStarCelebrate(){
+    starFx.classList.remove("starMegaPop");
+    void starFx.offsetWidth;
+    starFx.classList.add("starMegaPop");
+    burstAt(kidScoreCard);
+  }
+
+  function burstAt(host){
+    if(!host) return;
+    const burst = document.createElement("div");
+    burst.className = "burst";
+
+    const vectors = [
+      {dx:-110, dy:-40}, {dx:-70, dy:-90}, {dx:0, dy:-115},
+      {dx:70, dy:-90}, {dx:110, dy:-40}, {dx:-95, dy:35},
+      {dx:95, dy:35}, {dx:0, dy:100}
+    ];
+    const colors = ["#ef4444","#7c3aed","#3b82f6","#10b981","#f59e0b","#ec4899"];
+
+    vectors.forEach(v => {
+      const s = document.createElement("div");
+      s.className = "spark";
+      s.style.setProperty("--dx", v.dx + "px");
+      s.style.setProperty("--dy", v.dy + "px");
+      s.style.background = colors[Math.floor(Math.random()*colors.length)];
+      burst.appendChild(s);
+    });
+
+    host.appendChild(burst);
+    setTimeout(() => burst.remove(), 850);
+  }
+
+  // ---------------- Storage ----------------
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return deepCopy(defaults);
+      const parsed = JSON.parse(raw);
+
+      const merged = deepCopy(defaults);
+      Object.assign(merged, parsed);
+
+      if(!Array.isArray(merged.chores)) merged.chores = [];
+      merged.chores = merged.chores.map(c => ({
+        id: c.id || rid(),
+        name: (c.name || "Chore").toString(),
+        statusToday: normalizeStatus(c.statusToday),
+        approvedAllTime: clampInt(c.approvedAllTime ?? 0, 0, 999999)
+      }));
+
+      merged.points = clampInt(merged.points ?? 0, 0, 100);
+      merged.strikes = clampInt(merged.strikes ?? 0, 0, 2);
+      merged.pointsPerChore = clampInt(merged.pointsPerChore ?? 10, 1, 100);
+      merged.dailyGoalStars = clampInt(merged.dailyGoalStars ?? 8, 1, 10);
+      merged.autoDailyReset = merged.autoDailyReset === "off" ? "off" : "on";
+      merged.parentPasscode = (merged.parentPasscode || "bpasscode").toString();
+      merged.lastDateKey = (merged.lastDateKey || dateKey(new Date())).toString();
+
+      return merged;
+    } catch (e){
+      return deepCopy(defaults);
+    }
+  }
+
+  function saveState(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    } catch(e){
+      // ignore
+    }
+  }
+
+  function deepCopy(obj){
+    return JSON.parse(JSON.stringify(obj));
+  }
+
+  function normalizeStatus(s){
+    return (s === "claimed" || s === "approved" || s === "pending") ? s : "pending";
+  }
+
+  // ---------------- Helpers ----------------
+  function clampInt(v, min, max){
+    const n = Number(v);
+    if(!Number.isFinite(n)) return min;
+    return Math.max(min, Math.min(max, Math.round(n)));
+  }
+
+  function dateKey(d){
+    const y = d.getFullYear();
+    const m = String(d.getMonth()+1).padStart(2,"0");
+    const day = String(d.getDate()).padStart(2,"0");
+    return `${y}-${m}-${day}`;
+  }
+
+  function rid(){
+    try{
+      const a = new Uint32Array(2);
+      crypto.getRandomValues(a);
+      return "c_" + a[0].toString(16) + a[1].toString(16);
+    } catch(e){
+      return "c_" + Math.random().toString(16).slice(2);
+    }
+  }
+
+  function escapeHtml(str){
+    return String(str)
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#39;");
+  }
+  function escapeAttr(str){ return escapeHtml(str); }
+
+  function toast(msg){
+    const t = document.createElement("div");
+    t.className = "toast";
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 1200);
+  }
+
+})();
+</script>
+</body>
+</html>
